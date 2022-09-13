@@ -1,0 +1,18 @@
+{
+  "name": "personal-review",
+  "version": "1.0.0",
+  "description": "The purpose of this project is to create a platform where people can go and leave anonymous reviews of people who provide services both digitally and non-digitally, such as when someone designs a website logo for you or writes a book.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js"
+  },
+  "author": "Brian Ssekalegga",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "mongoose": "^6.6.0"
+  }
+}
