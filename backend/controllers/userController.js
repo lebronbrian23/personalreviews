@@ -139,31 +139,8 @@ const generateToken = (id) => {
     })
 }
 
-/*/function to generate random number
-const generateRandomNumber = (min, max)  => {
-    return Math.floor(Math.random() * (max - min) + min);
-}
-//function to send OTP using AWS-SNS
-const sendOTP = (mobileNo) =>{
-    //let mobileNo = "+16476329002";
-    let OTP = generateRandomNumber(1000,9999);
-
-    let params = {
-        Message: "Welcome! your mobile OTP code is: " + OTP +" Mobile Number is:" +mobileNo,
-        PhoneNumber: mobileNo,
-    };
-    return new AWS.SNS({apiVersion: '2010–03–31'}).publish(params).promise()
-        .then(message => {
-            console.log("OTP SEND SUCCESS");
-        })
-        .catch(err => {
-            console.log("Error "+err)
-            return err;});
-}
-//sendOTP();//calling send otp function
-*/
 module.exports = {
     registerUser,
     loginUser,
-    getMe
+    getMe,
 }
