@@ -1,11 +1,15 @@
 const asyncHandler = require('express-async-handler')
+
+const Review = require('../models/reviewModel')
+
 /**
- * @description Gets reviews
+ * @description Gets live reviews
  * @route GET /api/reviews
  * @access Private
  */
 const getReviews = asyncHandler(async ( req, res) => {
-    res.status(200).json({message : 'Get Reviews'})
+    const reviews = await Review.find({ status: 'live' })
+    res.status(200).json(reviews)
 })
 
 /**
@@ -18,7 +22,13 @@ const addReviews = asyncHandler(async ( req, res) => {
         res.status(400)
         throw new Error('Please add a description');
     }
-    res.status(200).json({'message':'Set Reviews'})
+    const review = await Review.create({
+        description : req.body.description,
+        rating: req.body.rating,
+        reviewee_id: req.body.reviewee_id,
+        reviewer_id: req.body.reviewer_id
+    })
+    res.status(200).json(review)
 })
 
 /**
@@ -27,7 +37,16 @@ const addReviews = asyncHandler(async ( req, res) => {
  * @access Private
  */
 const updateReview = asyncHandler(async ( req, res) => {
-    res.status(200).json({'message':`Updated Review ${req.params.id}`})
+    const review = await Review.findById(req.params.id)
+    //check if review exists
+    if(!review){
+        res.status(400)
+        throw new Error('Review not found')
+    }
+    const updatedReview = await Review.findByIdAndUpdate(req.params.id , req.body,{
+        new: true
+    })
+    res.status(200).json(updatedReview)
 })
 
 /**
@@ -36,9 +55,19 @@ const updateReview = asyncHandler(async ( req, res) => {
  * @access Private
  */
 const deleteReview = asyncHandler(async ( req, res) => {
-    res.status(200).json({'message':`Deleted Review ${req.params.id}`})
+    const review = await Review.findById(req.params.id)
+    //check if review exists
+    if(!review){
+        res.status(400)
+        throw new Error('Review not found')
+    }
+    const deletedReview = await Review.updateOne({
+        status :'down'
+    })
+
+    res.status(200).json(deletedReview)
 })
 
-module.exports ={
+module.exports = {
     getReviews, addReviews ,updateReview ,deleteReview
 }
