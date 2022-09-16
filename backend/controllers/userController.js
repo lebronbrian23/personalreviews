@@ -5,6 +5,8 @@ const User = require('../models/userModel')
 const Otp = require('../models/otpModel')
 const moment = require('moment')
 const {generateRandomNumber ,sendOTP} = require('./otpController')
+const Type = require("../models/typeModel");
+const UserType = require("../models/userTypeModel");
 
 /**
  * @description Registers new user
@@ -56,6 +58,14 @@ const registerUser = asyncHandler (async (req, res) => {
 
     if (user){
 
+        //get the general user type
+        const userType = await Type.findOne({name:'general'})
+
+        //map the user with their type
+        await UserType.create({
+            type_id:userType._id,
+            user_id:user._id
+        })
         // generate , save and send OTP to users phone
         const otp = await Otp.create({
             code: generateRandomNumber(1000,9999),
@@ -81,12 +91,75 @@ const registerUser = asyncHandler (async (req, res) => {
 })
 
 /**
+ * @description resend user OTP
+ * @route POST /api/users/resend-user-otp
+ * @access Public
+ */
+const resendUserOTP = asyncHandler (async  (req, res) => {
+    // get the logged in user
+    const user = await User.findById(req.user.id).select('-password')
+    //check if user exists
+    if (user){
+        // generate , save and send OTP to users phone
+        const otp = await Otp.create({
+            code: generateRandomNumber(1000,9999),
+            model_id: user.id,
+            verification_type:'User',
+            expiresAt:moment().add(6 , 'minute').format('YYYY-MM-DD hh:mm:ss')
+        })
+
+        //send OTP through sms
+        sendOTP(user.phone ,otp.code ,otp.expiresAt)
+
+        res.status(200).json({'message' : 'A code has been sent to '+ user.phone})
+
+    }else {
+        res.status(400)
+        throw new Error('User not found')
+    }
+})
+
+/**
  * @description Verify user OTP
- * @route POST /api/users
+ * @route POST /api/users/verify-user-otp
  * @access Public
  */
 const verifyUserOTP = asyncHandler (async  (req, res) => {
 
+    let current_time = moment().format('YYYY-MM-DD hh:mm:ss')
+    const {_id} = await  User.findById(req.user.id)
+    const {code} = req.body
+
+    //get the otp
+    const otp  = await Otp.findOne({code ,'model_id': _id})
+
+    //check if otp exists
+    if(otp){
+        //check if otp status is marked as new
+        if(otp.status === 'new'){
+            //check if otp is not expire
+            if(otp.expiresAt >= current_time){
+                await otp.updateOne({status:'used'})
+                res.status(200).json({message:'Account has been verified'})
+
+            }
+            else{
+                if(otp.status !== 'used') {
+                    otp.updateOne({status: 'expired'})
+                }
+
+                res.status(400)
+                throw new Error('Code is expired')
+            }
+        }
+        else{
+            res.status(400)
+            throw new Error('Code is expired or already used.')
+        }
+    }else {
+        res.status(400)
+        throw new Error('No OTP Code found')
+    }
 })
 
 /**
@@ -121,14 +194,23 @@ const loginUser = asyncHandler (async  (req, res) => {
  * @access Private
  */
 const getMe = asyncHandler (async (req, res) => {
-    const {_id , name , username ,phone ,email} = await  User.findById(req.user.id)
+    const {_id , name , username ,phone ,email ,user_type} = await User.findById(req.user.id)
+
+    //get the general user type
+    const userType = await UserType.findOne({user_id:_id})
+
+    //map the user with their type
+    const type = await Type.findOne({
+        _id:userType.type_id,
+    })
 
     res.json({
         id:_id,
         name,
         username,
         phone,
-        email
+        email,
+        user_type:type.name,
     })
 })
 
@@ -143,4 +225,6 @@ module.exports = {
     registerUser,
     loginUser,
     getMe,
+    verifyUserOTP,
+    resendUserOTP
 }
