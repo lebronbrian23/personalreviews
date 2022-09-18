@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Type = require('./backend/models/typeModel')
 const User = require('./backend/models/userModel')
 const UserType = require('./backend/models/userTypeModel')
+const Otp = require('./backend/models/otpModel')
+const Review = require('./backend/models/reviewModel')
 const dotenv = require('dotenv').config();
 const bcrypt = require("bcryptjs");
 
@@ -31,10 +33,15 @@ const seedTypes = [
 ]
 
 const seedDB = async  ()  => {
+    //delete existing tables
+    await Otp.deleteMany({});
+    await Review.deleteMany({});
+    await UserType.deleteMany({});
     await Type.deleteMany({});
-    await Type.insertMany(seedTypes)
-
     await User.deleteMany({});
+
+    //insert data in tables
+    await Type.insertMany(seedTypes)
 
     //hashing the password
     const salt = await bcrypt.genSalt(10)

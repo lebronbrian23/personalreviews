@@ -2,11 +2,11 @@ const express = require('express')
 
 const router = express.Router()
 
-const {registerUser ,loginUser, getMe ,verifyUserOTP ,resendUserOTP} = require('../controllers/userController')
+const {registerUser ,loginUser, getMe ,verifyUserOTP ,resendUserOTP,updateUser} = require('../controllers/userController')
 
 const {protect} = require('../middleware/authMiddleware')
 
-router.post('/' , registerUser)
+router.route('/').post(registerUser).put(protect,updateUser)
 
 router.post('/verify-user-otp', protect ,verifyUserOTP)
 

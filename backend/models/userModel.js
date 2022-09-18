@@ -8,7 +8,6 @@ const userSchema = mongoose.Schema(
         },
         email:{
             type: String,
-            unique:true
         },
         username:{
             type: String,
@@ -24,7 +23,7 @@ const userSchema = mongoose.Schema(
             type: String,
             required: [true ,'Password is required']
         },
-        Bio:{
+        bio:{
             type: String,
         },
         profile_link:{

@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
-
+const moment = require('moment')
 const Review = require('../models/reviewModel')
+const User = require('../models/userModel')
 
 /**
  * @description Gets live reviews
@@ -9,8 +10,30 @@ const Review = require('../models/reviewModel')
  */
 const getReviews = asyncHandler(async ( req, res) => {
     const reviews = await Review.find({ status: 'live' })
-    res.status(200).json(reviews)
+    res.status(200).json({reviews})
 })
+
+/**
+ * @description Gets live reviews sent to me
+ * @route GET /api/reviews/to-me
+ * @access Private
+ */
+const getReviewsToMe = asyncHandler(async ( req, res) => {
+    const reviews = await Review.find({ status: 'live' ,reviewee_id : req.user.id})
+    res.status(200).json({reviews})
+})
+
+
+/**
+ * @description Gets live reviews sent to others
+ * @route GET /api/reviews/to-others
+ * @access Private
+ */
+const getReviewsToOthers = asyncHandler(async ( req, res) => {
+    const reviews = await Review.find({ status: 'live' ,reviewer_id : req.user.id})
+    res.status(200).json({reviews})
+})
+
 
 /**
  * @description Set reviews
@@ -18,16 +41,47 @@ const getReviews = asyncHandler(async ( req, res) => {
  * @access Private
  */
 const addReviews = asyncHandler(async ( req, res) => {
-    if(!req.body.description){
+    const  {description ,rating,reviewee_id ,reviewer_id} = req.body
+    //check if description is in body
+    if(!description){
         res.status(400)
         throw new Error('Please add a description');
     }
+    //check if reviewee_id is in body
+    if(!reviewee_id){
+        res.status(400)
+        throw new Error('Please add a reviewee_id');
+    }
+    //check if reviewer_id is in body
+    if(!reviewer_id){
+        res.status(400)
+        throw new Error('Please add a reviewer_id');
+    }
+    // here i limit the number of reviews posted on a user's profile by the same person in 24hrs
+    //get current date
+    let current_date = moment().format('YYYY-MM-DD')
+
+    //check for the last review
+    const check_last_posted_review = await Review.findOne({reviewee_id ,reviewer_id}).sort({ createdAt: 'desc' })
+
+    //if a review exists
+    if(check_last_posted_review) {
+        //get the date when it was created
+        let last_review_created_date = moment(check_last_posted_review.createdAt).format('YYYY-MM-DD')
+        //check if the created date  is equal to current data
+        if (last_review_created_date === current_date) {
+            res.status(400)
+            throw new Error('You can only make one review to this profile in 24hrs')
+        }
+    }
+    //create a review
     const review = await Review.create({
-        description : req.body.description,
-        rating: req.body.rating,
-        reviewee_id: req.body.reviewee_id,
-        reviewer_id: req.body.reviewer_id
+        description : description,
+        rating: rating,
+        reviewee_id: reviewee_id,
+        reviewer_id: reviewer_id
     })
+
     res.status(200).json(review)
 })
 
@@ -51,7 +105,7 @@ const updateReview = asyncHandler(async ( req, res) => {
 
 /**
  * @description Delete reviews
- * @route DELEETE /api/reviews/:id
+ * @route DELETE /api/reviews/:id
  * @access Private
  */
 const deleteReview = asyncHandler(async ( req, res) => {
@@ -61,13 +115,12 @@ const deleteReview = asyncHandler(async ( req, res) => {
         res.status(400)
         throw new Error('Review not found')
     }
-    const deletedReview = await Review.updateOne({
-        status :'down'
-    })
+    //update the review
+    const updateReview = await Review.findOneAndUpdate({_id:req.params.id} ,{status :'down'} , {returnOriginal: false})
 
-    res.status(200).json(deletedReview)
+    res.status(200).json(updatReview)
 })
 
 module.exports = {
-    getReviews, addReviews ,updateReview ,deleteReview
+    getReviews, addReviews ,updateReview ,deleteReview,getReviewsToMe,getReviewsToOthers
 }

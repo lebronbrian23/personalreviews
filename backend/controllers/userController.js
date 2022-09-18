@@ -7,6 +7,7 @@ const moment = require('moment')
 const {generateRandomNumber ,sendOTP} = require('./otpController')
 const Type = require("../models/typeModel");
 const UserType = require("../models/userTypeModel");
+const Review = require("../models/reviewModel");
 
 /**
  * @description Registers new user
@@ -53,7 +54,8 @@ const registerUser = asyncHandler (async (req, res) => {
         email,
         phone,
         username,
-        password: hashedPassword
+        password: hashedPassword,
+        profile_link:username
     })
 
     if (user){
@@ -214,6 +216,25 @@ const getMe = asyncHandler (async (req, res) => {
     })
 })
 
+/**
+ * @description Update a user
+ * @route PUT /api/users
+ * @access Private
+ */
+const updateUser = asyncHandler( async ( req ,res ) =>{
+    const {bio , profile_link} = req.body
+    const user = await User.findById(req.user.id)
+
+    //check if review exists
+    if(!user){
+        res.status(400)
+        throw new Error('User not found')
+    }
+    //update the review
+    const updateUserData = await User.findOneAndUpdate({_id:user.id} ,{bio :bio , profile_link: profile_link} , {returnOriginal: false})
+
+    res.status(200).json(updateUserData)
+})
 //generate JWT
 const generateToken = (id) => {
     return jwt.sign({id} , process.env.JWT_SECRET,{
@@ -226,5 +247,6 @@ module.exports = {
     loginUser,
     getMe,
     verifyUserOTP,
-    resendUserOTP
+    resendUserOTP,
+    updateUser
 }
