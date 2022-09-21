@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { getReviews , addReviews ,updateReview ,deleteReview ,getReviewsToMe, getReviewsToOthers } = require('../controllers/reviewController');
 const {protect} = require('../middleware/authMiddleware')
+const {
+    getReviews ,
+    addReviews ,
+    updateReview ,
+    deleteReview ,
+    getReviewsToMe ,
+    getReviewsToOthers } = require('../controllers/reviewController');
 
 
 router.route('/').get( getReviews ).post( addReviews);

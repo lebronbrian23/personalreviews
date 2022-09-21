@@ -4,6 +4,7 @@ const User = require('./backend/models/userModel')
 const UserType = require('./backend/models/userTypeModel')
 const Otp = require('./backend/models/otpModel')
 const Review = require('./backend/models/reviewModel')
+const Rating = require('./backend/models/ratingModel')
 const dotenv = require('dotenv').config();
 const bcrypt = require("bcryptjs");
 
@@ -32,6 +33,27 @@ const seedTypes = [
     }
 ]
 
+const seedRatings = [
+    {
+        rating: 0
+    },
+    {
+        rating: 1
+    },
+    {
+        rating: 2
+    },
+    {
+        rating: 3
+    },
+    {
+        rating: 4
+    },
+    {
+        rating: 5
+    }
+]
+
 const seedDB = async  ()  => {
     //delete existing tables
     await Otp.deleteMany({});
@@ -42,6 +64,7 @@ const seedDB = async  ()  => {
 
     //insert data in tables
     await Type.insertMany(seedTypes)
+    await Rating.insertMany(seedRatings)
 
     //hashing the password
     const salt = await bcrypt.genSalt(10)

@@ -7,7 +7,9 @@ const moment = require('moment')
 const {generateRandomNumber ,sendOTP} = require('./otpController')
 const Type = require("../models/typeModel");
 const UserType = require("../models/userTypeModel");
+const escapeStringRegexp = require('escape-string-regexp');
 const Review = require("../models/reviewModel");
+
 
 /**
  * @description Registers new user
@@ -55,7 +57,8 @@ const registerUser = asyncHandler (async (req, res) => {
         phone,
         username,
         password: hashedPassword,
-        profile_link:username
+        profile_link:username,
+        bio:''
     })
 
     if (user){
@@ -191,12 +194,12 @@ const loginUser = asyncHandler (async  (req, res) => {
 })
 
 /**
- * @description Authenticate a user
+ * @description Get a logged user's profile
  * @route GET /api/users
  * @access Private
  */
 const getMe = asyncHandler (async (req, res) => {
-    const {_id , name , username ,phone ,email ,user_type} = await User.findById(req.user.id)
+    const {_id , name , username ,phone ,email } = await User.findById(req.user.id)
 
     //get the general user type
     const userType = await UserType.findOne({user_id:_id})
@@ -206,7 +209,7 @@ const getMe = asyncHandler (async (req, res) => {
         _id:userType.type_id,
     })
 
-    res.json({
+    res.status(200).json({
         id:_id,
         name,
         username,
@@ -217,13 +220,133 @@ const getMe = asyncHandler (async (req, res) => {
 })
 
 /**
- * @description Update a user
+ * @description Get a user by username
+ * @route GET /api/users/u/:username
+ * @access Public
+ */
+const getUserByUsername = asyncHandler (async (req, res) => {
+
+    const user = await User.findOne({profile_link:req.params.username})
+
+    const reviews = await Review.find({ status: 'live' ,reviewee_id : user.id})
+
+    const reviews_array = []
+    // for loop to iterate through each review
+    for (const index in reviews) {
+
+        reviews_array.push({
+            id:reviews[index]._id,
+            description:reviews[index].description,
+            rating:reviews[index].rating,
+            status:reviews[index].status,
+            createdAt:moment(reviews[index].createdAt).format("MMM D YYYY")
+        })
+    }
+
+    res.status(200).json({
+        'user' : {id:user._id , bio:user.bio , name:user.name}, reviews : reviews_array
+    })
+})
+
+/**
+ * @description Update a user data
  * @route PUT /api/users
  * @access Private
  */
 const updateUser = asyncHandler( async ( req ,res ) =>{
-    const {bio , profile_link} = req.body
+    const {bio , profile_link } = req.body
     const user = await User.findById(req.user.id)
+
+    //check if user exists
+    if(!user){
+        res.status(400)
+        throw new Error('User not found')
+    }
+    //check if user with profile link exists
+    const profileLinkExists = await User.findOne({profile_link})
+    if(profileLinkExists){
+        res.status(400)
+        throw new Error('User with profile link already exists')
+    }
+    //update the user data
+    const updateUserData = await User.findOneAndUpdate(
+        {_id:user.id} ,
+        {bio: bio , profile_link: profile_link } ,
+        {returnOriginal: false})
+
+    res.status(200).json(updateUserData)
+})
+
+/**
+ * @description search users
+ * @route GET /api/users/list-users
+ * @access Public
+ */
+const searchUsers = asyncHandler (async (req, res) => {
+    const {search , limit} = req.query
+
+    const search_query = escapeStringRegexp(search);
+    const users = await User.find({
+        $or: [{ name: { $regex: search_query } ,verified: 'yes', is_account_active: 'yes'}],
+
+    }).limit(limit)
+
+    //const users = await User.find();
+    const users_array =  []
+
+    // for loop to iterate through each user
+    for (const index in users) {
+
+        //get the general user type
+        const userType = await UserType.findOne({user_id:users[index]._id})
+        //map the user with their type
+        const type = await Type.findOne({_id:userType.type_id,})
+
+        //check if the user has a usertype general
+        if(type.name === 'general') {
+            //push data to user array
+            users_array.push({
+                id: users[index]._id,
+                name: users[index].name,
+                username: users[index].username,
+                phone: users[index].phone,
+                bio: users[index].bio,
+                email: users[index].email,
+                user_type: type.name,
+
+            })
+        }
+    }
+    res.status(200).json(users_array)
+})
+
+
+/**_______________________________________
+ *  For Backend
+ ________________________________________*/
+
+/**
+ * @description Update a user type
+ * @route PUT /api/users/user-type
+ * @access Private | Backend
+ */
+const updateUserType = asyncHandler( async ( req ,res ) =>{
+    const {user_id , type_id} = req.body
+
+    //check the user type of the logged in user to see if there admins
+    if(req.type.name !== 'admin') {
+        res.status(400)
+        throw new Error('Only Admins can update user type')
+    }
+
+    //check if the logged in user is  the same as the user being updated
+    if(req.user.id === user_id) {
+        res.status(400)
+        throw new Error('You can\'t update your own account type.')
+    }
+
+    //check user
+    const user = await User.findById(user_id)
 
     //check if review exists
     if(!user){
@@ -231,11 +354,93 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
         throw new Error('User not found')
     }
     //update the review
-    const updateUserData = await User.findOneAndUpdate({_id:user.id} ,{bio :bio , profile_link: profile_link} , {returnOriginal: false})
+    const updateUserType = await UserType.findOneAndUpdate({user_id:user_id} ,{type_id :type_id} , {returnOriginal: false})
+
+    res.status(200).json(updateUserType)
+
+})
+
+/**
+ * @description list users
+ * @route GET /api/users/list-users
+ * @access Private | Backend
+ */
+const listUsers = asyncHandler (async (req, res) => {
+    const {search , limit} = req.query
+
+    const search_query = escapeStringRegexp(search);
+    const users = await User.find({
+        $or: [{ name: { $regex: search_query } }],
+    }).limit(limit)
+
+    //const users = await User.find();
+    const users_array =  []
+
+    // for loop to iterate through each user
+    for (const index in users) {
+
+        //get the general user type
+        const userType = await UserType.findOne({user_id:users[index]._id})
+        //map the user with their type
+        const type = await Type.findOne({_id:userType.type_id,})
+
+        //push data to user array
+        users_array.push({
+            id:users[index]._id,
+            name:users[index].name,
+            username:users[index].username,
+            phone:users[index].phone,
+            bio:users[index].bio,
+            email:users[index].email,
+            user_type:type.name,
+        })
+    }
+    res.status(200).json(users_array)
+})
+
+/**
+ * @description Update a user account status
+ * @route PUT /api/users/update-user-account-status
+ * @access Private | Backend
+ */
+const updateUserAccountStatus = asyncHandler( async ( req ,res ) =>{
+    const {is_account_active, user_id} = req.body
+
+    //check the user type of the logged in user to see if there admins
+    if(req.type.name !== 'admin') {
+        res.status(400)
+        throw new Error('Only Admins can update user status')
+    }
+    //check if the logged in user is  the same as the user being updated
+    if(req.user.id === user_id) {
+        res.status(400)
+        throw new Error('You can\'t update your own account status.')
+    }
+    const user = await User.findById(user_id)
+
+    //check if user exists
+    if (!user) {
+        res.status(400)
+        throw new Error('User not found')
+    }
+
+    //update the user
+    const updateUserData = await User.findOneAndUpdate(
+        {_id: user.id},
+        {is_account_active: is_account_active},
+        {returnOriginal: false})
 
     res.status(200).json(updateUserData)
+
 })
-//generate JWT
+
+/**
+ *  user authentication
+ */
+
+/**
+ * generate JWT for user authentication
+ */
 const generateToken = (id) => {
     return jwt.sign({id} , process.env.JWT_SECRET,{
         expiresIn: '30d',
@@ -248,5 +453,10 @@ module.exports = {
     getMe,
     verifyUserOTP,
     resendUserOTP,
-    updateUser
+    updateUser,
+    updateUserType,
+    listUsers,
+    searchUsers,
+    updateUserAccountStatus,
+    getUserByUsername
 }

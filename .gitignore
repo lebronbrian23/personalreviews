@@ -2,6 +2,8 @@
 .env
 .DS_Store
 /app/.DS_Store
+/backend/.DS_Store
+/frontend/.DS_Store
 /public/.DS_Store
 /views/.DS_Store
 /.idea

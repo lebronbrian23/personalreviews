@@ -3,15 +3,6 @@ const moment = require('moment')
 const Review = require('../models/reviewModel')
 const User = require('../models/userModel')
 
-/**
- * @description Gets live reviews
- * @route GET /api/reviews
- * @access Private
- */
-const getReviews = asyncHandler(async ( req, res) => {
-    const reviews = await Review.find({ status: 'live' })
-    res.status(200).json({reviews})
-})
 
 /**
  * @description Gets live reviews sent to me
@@ -19,10 +10,24 @@ const getReviews = asyncHandler(async ( req, res) => {
  * @access Private
  */
 const getReviewsToMe = asyncHandler(async ( req, res) => {
-    const reviews = await Review.find({ status: 'live' ,reviewee_id : req.user.id})
-    res.status(200).json({reviews})
-})
 
+    const reviews = await Review.find({ status: 'live' ,reviewee_id : req.user.id})
+
+    const reviews_array = []
+    // for loop to iterate through each review
+    for (const index in reviews) {
+
+        reviews_array.push({
+            id:reviews[index]._id,
+            description:reviews[index].description,
+            rating:reviews[index].rating,
+            status:reviews[index].status,
+            createdAt:moment(reviews[index].createdAt).format("MMM D YYYY")
+        })
+    }
+
+    res.status(200).json(reviews_array)
+})
 
 /**
  * @description Gets live reviews sent to others
@@ -31,9 +36,26 @@ const getReviewsToMe = asyncHandler(async ( req, res) => {
  */
 const getReviewsToOthers = asyncHandler(async ( req, res) => {
     const reviews = await Review.find({ status: 'live' ,reviewer_id : req.user.id})
-    res.status(200).json({reviews})
-})
 
+    const reviews_array = []
+    // for loop to iterate through each review
+    for (const index in reviews) {
+        //get the reviewee
+        const reviewee = await User.findById(reviews[index].reviewee_id)
+
+        reviews_array.push({
+            id:reviews[index]._id,
+            reviewee:reviewee.name,
+            reviewee_id:reviews[index].reviewee_id,
+            description:reviews[index].description,
+            rating:reviews[index].rating,
+            status:reviews[index].status,
+            createdAt:moment(reviews[index].createdAt).format("MMM D YYYY")
+        })
+    }
+
+    res.status(200).json({reviews_array})
+})
 
 /**
  * @description Set reviews
@@ -41,6 +63,11 @@ const getReviewsToOthers = asyncHandler(async ( req, res) => {
  * @access Private
  */
 const addReviews = asyncHandler(async ( req, res) => {
+    //check the user type of the logged in user to see if there admins
+    if(req.type.name !== 'general') {
+        res.status(400)
+        throw new Error('You can\'t perform this action')
+    }
     const  {description ,rating,reviewee_id ,reviewer_id} = req.body
     //check if description is in body
     if(!description){
@@ -86,9 +113,46 @@ const addReviews = asyncHandler(async ( req, res) => {
 })
 
 /**
+ * @description Gets live reviews
+ * @route GET /api/reviews
+ * @access Private | Backend
+ */
+const getReviews = asyncHandler(async ( req, res) => {
+    //get the reviews
+    const reviews = await Review.find({ status: 'live' })
+
+    const reviews_array = []
+    // for loop to iterate through each review
+    for (const index in reviews) {
+        //get the reviewer
+        const reviewer = await User.findById(reviews[index].reviewer_id)
+        //get the reviewee
+        const reviewee = await User.findById(reviews[index].reviewee_id)
+
+        reviews_array.push({
+            id:reviews[index]._id,
+            reviewer:reviewer.name,
+            reviewer_id:reviews[index].reviewer_id,
+            reviewee:reviewee.name,
+            reviewee_id:reviews[index].reviewee_id,
+            description:reviews[index].description,
+            rating:reviews[index].rating,
+            status:reviews[index].status,
+            createdAt:moment(reviews[index].createdAt).format("MMM D YYYY")
+        })
+    }
+
+    res.status(200).json({reviews_array})
+})
+
+/**_______________________________________
+ *  For Backend
+ ________________________________________*/
+
+/**
  * @description Update reviews
  * @route PUT /api/reviews/:id
- * @access Private
+ * @access Private | Backend
  */
 const updateReview = asyncHandler(async ( req, res) => {
     const review = await Review.findById(req.params.id)
@@ -106,9 +170,14 @@ const updateReview = asyncHandler(async ( req, res) => {
 /**
  * @description Delete reviews
  * @route DELETE /api/reviews/:id
- * @access Private
+ * @access Private | Backend
  */
 const deleteReview = asyncHandler(async ( req, res) => {
+    //check the user type of the logged in user to see if there admins
+    if(req.type.name !== 'admin' || req.type.name !== 'moderator') {
+        res.status(400)
+        throw new Error('Only Admins and Moderators can perform this action')
+    }
     const review = await Review.findById(req.params.id)
     //check if review exists
     if(!review){
@@ -116,9 +185,13 @@ const deleteReview = asyncHandler(async ( req, res) => {
         throw new Error('Review not found')
     }
     //update the review
-    const updateReview = await Review.findOneAndUpdate({_id:req.params.id} ,{status :'down'} , {returnOriginal: false})
+    const updateReview = await Review.findOneAndUpdate(
+        {_id:req.params.id} ,
+        {status :'down'} ,
+        {returnOriginal: false}
+    )
 
-    res.status(200).json(updatReview)
+    res.status(200).json(updateReview)
 })
 
 module.exports = {

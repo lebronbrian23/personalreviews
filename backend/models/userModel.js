@@ -28,6 +28,7 @@ const userSchema = mongoose.Schema(
         },
         profile_link:{
             type: String,
+            unique: true
         },
         verified:{
             type: String,
