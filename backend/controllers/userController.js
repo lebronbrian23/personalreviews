@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 const User = require('../models/userModel')
 const Otp = require('../models/otpModel')
 const moment = require('moment')
-const {generateRandomNumber ,sendOTP} = require('./otpController')
+const {generateRandomNumber ,sendSMS ,saveOTP} = require('./otpController')
 const Type = require("../models/typeModel");
 const UserType = require("../models/userTypeModel");
 const escapeStringRegexp = require('escape-string-regexp');
@@ -56,7 +56,7 @@ const registerUser = asyncHandler (async (req, res) => {
         email,
         phone,
         username,
-        password: hashedPassword,
+        password:hashedPassword,
         profile_link:username,
         bio:''
     })
@@ -80,7 +80,8 @@ const registerUser = asyncHandler (async (req, res) => {
         })
 
         //send OTP through sms
-        sendOTP(user.phone ,otp.code ,otp.expiresAt)
+        let message = 'Welcome! your Personal Review code is: '+ otp.code + ' expires at '+ otp.expiresAt+ '.Don\'t share it with anyone'
+        sendSMS(user.phone ,message)
 
         res.status(200).json({
             _id: user.id,
@@ -106,15 +107,11 @@ const resendUserOTP = asyncHandler (async  (req, res) => {
     //check if user exists
     if (user){
         // generate , save and send OTP to users phone
-        const otp = await Otp.create({
-            code: generateRandomNumber(1000,9999),
-            model_id: user.id,
-            verification_type:'User',
-            expiresAt:moment().add(6 , 'minute').format('YYYY-MM-DD hh:mm:ss')
-        })
+        const otp = await saveOTP(user.id ,'User' ,6)
 
         //send OTP through sms
-        sendOTP(user.phone ,otp.code ,otp.expiresAt)
+        let message = 'Your Personal Review code is: '+ otp.code + ' expires at '+ otp.expiresAt+ '.Don\'t share it with anyone'
+        sendSMS(user.phone ,message)
 
         res.status(200).json({'message' : 'A code has been sent to '+ user.phone})
 
@@ -131,12 +128,12 @@ const resendUserOTP = asyncHandler (async  (req, res) => {
  */
 const verifyUserOTP = asyncHandler (async  (req, res) => {
 
-    let current_time = moment().format('YYYY-MM-DD hh:mm:ss')
-    const {_id} = await  User.findById(req.user.id)
+    const current_time = moment().format('YYYY-MM-DD hh:mm:ss')
+    const {_id} = await User.findById(req.user.id)
     const {code} = req.body
 
     //get the otp
-    const otp  = await Otp.findOne({code ,'model_id': _id})
+    const otp  = await Otp.findOne({code ,model_id: _id, verification_type:'User'})
 
     //check if otp exists
     if(otp){
@@ -145,6 +142,8 @@ const verifyUserOTP = asyncHandler (async  (req, res) => {
             //check if otp is not expire
             if(otp.expiresAt >= current_time){
                 await otp.updateOne({status:'used'})
+                //update verified to yes
+                await User.updateOne({verified:'yes'})
                 res.status(200).json({message:'Account has been verified'})
 
             }
@@ -192,6 +191,98 @@ const loginUser = asyncHandler (async  (req, res) => {
     }
 
 })
+
+/**
+ * @description Forgot password
+ * @route POST /api/users/forgot-password
+ * @access Public
+ */
+const forgotPasword = asyncHandler( async ( req , res) => {
+    const { username } = req.body
+
+    //check for username
+    const user = await  User.findOne({username})
+
+    // if user with the username doesn't exist
+    if(!user){
+        res.status(400)
+        throw new Error('Username doesn\'t match')
+    }
+    // generate , save and send OTP to users phone
+    const otp = await saveOTP(user.id ,'Password' ,6)
+
+    //send OTP through sms
+    let message = 'Your password reset code is: '+ otp.code + ' expires at '+ otp.expiresAt+ '.Don\'t share it with anyone'
+    sendSMS(user.phone ,message)
+
+    res.status(200).json({'message' : 'A password reset code has been sent to '+ user.phone})
+
+} )
+
+/**
+ * @description Reset password
+ * @route PUT /api/users/reset-password
+ * @access Public
+ */
+const resetPasword = asyncHandler( async ( req , res) => {
+
+    const { username ,code , password } = req.body
+    const current_time = moment().format('YYYY-MM-DD hh:mm:ss');
+
+    //check for username
+    const user = await User.findOne({username})
+
+    // if user with the username doesn't exist
+    if(!user){
+        res.status(400)
+        throw new Error('Username doesn\'t match')
+    }
+
+    //get the otp
+    const otp  = await Otp.findOne({code ,model_id: user.id , verification_type:'Password'})
+
+    //check if otp exists
+    if(otp){
+        //check if otp status is marked as new
+        if(otp.status === 'new'){
+            //check if otp is not expire
+            if(otp.expiresAt >= current_time){
+                await otp.updateOne({status:'used'})
+
+                //hashing the password
+                const salt = await bcrypt.genSalt(10)
+                const hashedPassword = await bcrypt.hash(password ,salt)
+
+                //update user password
+                await User.updateOne({username},{password:hashedPassword} )
+
+                //send OTP through sms
+                let message = 'Your password has been reset'
+                sendSMS(user.phone ,message)
+
+                res.status(200).json({message:'Your password has been reset'})
+
+            }
+            else{
+                if(otp.status !== 'used') {
+                    otp.updateOne({status: 'expired'})
+                }
+
+                res.status(400)
+                throw new Error('Code is expired')
+            }
+        }
+        else{
+            res.status(400)
+            throw new Error('Code is expired or already used.')
+        }
+    }
+    else {
+        res.status(400)
+        throw new Error('No OTP Code found')
+    }
+
+} )
 
 /**
  * @description Get a logged user's profile
@@ -288,7 +379,6 @@ const searchUsers = asyncHandler (async (req, res) => {
     const search_query = escapeStringRegexp(search);
     const users = await User.find({
         $or: [{ name: { $regex: search_query } ,verified: 'yes', is_account_active: 'yes'}],
-
     }).limit(limit)
 
     //const users = await User.find();
@@ -458,5 +548,7 @@ module.exports = {
     listUsers,
     searchUsers,
     updateUserAccountStatus,
-    getUserByUsername
+    getUserByUsername,
+    forgotPasword,
+    resetPasword
 }

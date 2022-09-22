@@ -13,7 +13,9 @@ const {
     listUsers,
     searchUsers,
     updateUserAccountStatus,
-    getUserByUsername
+    getUserByUsername,
+    forgotPasword,
+    resetPasword
 } = require('../controllers/userController')
 
 const {protect} = require('../middleware/authMiddleware')
@@ -23,6 +25,10 @@ router.route('/').post(registerUser).put(protect,updateUser)
 router.post('/verify-user-otp', protect ,verifyUserOTP)
 
 router.post('/resend-user-otp', protect ,resendUserOTP)
+
+router.post('/forgot-password' ,forgotPasword)
+
+router.put('/reset-password' ,resetPasword)
 
 router.post('/login' ,loginUser)
 
