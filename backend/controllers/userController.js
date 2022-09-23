@@ -319,6 +319,10 @@ const getUserByUsername = asyncHandler (async (req, res) => {
 
     const user = await User.findOne({profile_link:req.params.username})
 
+    if(!user){
+        res.status(400)
+        throw new Error('User not found.')
+    }
     const reviews = await Review.find({ status: 'live' ,reviewee_id : user.id})
 
     const reviews_array = []
