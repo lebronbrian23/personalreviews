@@ -9,6 +9,7 @@ const Type = require("../models/typeModel");
 const UserType = require("../models/userTypeModel");
 const escapeStringRegexp = require('escape-string-regexp');
 const Review = require("../models/reviewModel");
+const {saveImage} = require("./imageController");
 
 
 /**
@@ -349,7 +350,7 @@ const getUserByUsername = asyncHandler (async (req, res) => {
  * @access Private
  */
 const updateUser = asyncHandler( async ( req ,res ) =>{
-    const {bio , profile_link } = req.body
+    const {bio } = req.body
     const user = await User.findById(req.user.id)
 
     //check if user exists
@@ -357,17 +358,15 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
         res.status(400)
         throw new Error('User not found')
     }
-    //check if user with profile link exists
-    const profileLinkExists = await User.findOne({profile_link})
-    if(profileLinkExists){
-        res.status(400)
-        throw new Error('User with profile link already exists')
-    }
     //update the user data
     const updateUserData = await User.findOneAndUpdate(
         {_id:user.id} ,
-        {bio: bio , profile_link: profile_link } ,
+        {bio: bio } ,
         {returnOriginal: false})
+
+    // save user profile picture
+    //let path = 'https://image.shutterstock.com/image-vector/flower-theme-elements-vectoreps-260nw-256992235.jpg'
+    //const saveProfile =await saveImage(user.id ,'User' ,'reviewController.js' ,user.name)
 
     res.status(200).json(updateUserData)
 })
