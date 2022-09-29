@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const moment = require('moment')
 const Review = require('../models/reviewModel')
 const User = require('../models/userModel')
+const {sendSMS} = require("./otpController");
 
 
 /**
@@ -11,7 +12,7 @@ const User = require('../models/userModel')
  */
 const getReviewsToMe = asyncHandler(async ( req, res) => {
 
-    const reviews = await Review.find({ status: 'live' ,reviewee_id : req.user.id})
+    const reviews = await Review.find({ status: 'live' ,reviewee_id : req.user.id}).sort({createdAt: 'descending'})
 
     const reviews_array = []
     // for loop to iterate through each review
@@ -35,7 +36,7 @@ const getReviewsToMe = asyncHandler(async ( req, res) => {
  * @access Private
  */
 const getReviewsToOthers = asyncHandler(async ( req, res) => {
-    const reviews = await Review.find({ status: 'live' ,reviewer_id : req.user.id})
+    const reviews = await Review.find({ status: 'live' ,reviewer_id : req.user.id}).sort({createdAt: 'descending'})
 
     const reviews_array = []
     // for loop to iterate through each review
@@ -54,7 +55,7 @@ const getReviewsToOthers = asyncHandler(async ( req, res) => {
         })
     }
 
-    res.status(200).json({reviews_array})
+    res.status(200).json(reviews_array)
 })
 
 /**
@@ -63,12 +64,16 @@ const getReviewsToOthers = asyncHandler(async ( req, res) => {
  * @access Private
  */
 const addReviews = asyncHandler(async ( req, res) => {
+
+    //get id of logged in user
+    const reviewer_id = req.user.id
+
     //check the user type of the logged in user to see if there admins
     if(req.type.name !== 'general') {
         res.status(400)
         throw new Error('You can\'t perform this action')
     }
-    const  {description ,rating,reviewee_id ,reviewer_id} = req.body
+    const  {description ,rating,reviewee_id } = req.body
     //check if description is in body
     if(!description){
         res.status(400)
@@ -79,11 +84,7 @@ const addReviews = asyncHandler(async ( req, res) => {
         res.status(400)
         throw new Error('Please add a reviewee_id');
     }
-    //check if reviewer_id is in body
-    if(!reviewer_id){
-        res.status(400)
-        throw new Error('Please add a reviewer_id');
-    }
+
     // here i limit the number of reviews posted on a user's profile by the same person in 24hrs
     //get current date
     let current_date = moment().format('YYYY-MM-DD')
@@ -93,6 +94,7 @@ const addReviews = asyncHandler(async ( req, res) => {
 
     //if a review exists
     if(check_last_posted_review) {
+
         //get the date when it was created
         let last_review_created_date = moment(check_last_posted_review.createdAt).format('YYYY-MM-DD')
         //check if the created date  is equal to current data
@@ -119,7 +121,7 @@ const addReviews = asyncHandler(async ( req, res) => {
  */
 const getReviews = asyncHandler(async ( req, res) => {
     //get the reviews
-    const reviews = await Review.find({ status: 'live' })
+    const reviews = await Review.find({ status: 'live' }).sort({createdAt: 'descending'})
 
     const reviews_array = []
     // for loop to iterate through each review
@@ -142,7 +144,7 @@ const getReviews = asyncHandler(async ( req, res) => {
         })
     }
 
-    res.status(200).json({reviews_array})
+    res.status(200).json(reviews_array)
 })
 
 /**_______________________________________
@@ -173,11 +175,13 @@ const updateReview = asyncHandler(async ( req, res) => {
  * @access Private | Backend
  */
 const deleteReview = asyncHandler(async ( req, res) => {
+
     //check the user type of the logged in user to see if there admins
     if(req.type.name !== 'admin' || req.type.name !== 'moderator') {
         res.status(400)
         throw new Error('Only Admins and Moderators can perform this action')
     }
+
     const review = await Review.findById(req.params.id)
     //check if review exists
     if(!review){

@@ -10,12 +10,12 @@ const {
     getReviewsToOthers } = require('../controllers/reviewController');
 
 
-router.route('/').get( getReviews ).post( addReviews);
+router.route('/').get( getReviews ).post(protect, addReviews);
 
 router.get('/to-me', protect ,getReviewsToMe)
 
 router.get('/to-others', protect ,getReviewsToOthers)
 
-router.route('/:id').put(updateReview).delete( deleteReview);
+router.route('/:id').put(protect ,updateReview).delete(protect, deleteReview);
 
 module.exports = router

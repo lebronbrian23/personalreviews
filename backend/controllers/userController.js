@@ -55,7 +55,7 @@ const registerUser = asyncHandler (async (req, res) => {
     const user = await User.create({
         name,
         email,
-        phone,
+        phone : '+'+phone,
         username,
         password:hashedPassword,
         profile_link:username,
@@ -87,8 +87,9 @@ const registerUser = asyncHandler (async (req, res) => {
         res.status(200).json({
             _id: user.id,
             name: user.name,
-            email: user.email,
-            token: generateToken(user._id)
+            verified: user.verified,
+            token: generateToken(user._id),
+            user_type:userType.name,
         })
     }else{
         res.status(400)
@@ -104,7 +105,7 @@ const registerUser = asyncHandler (async (req, res) => {
  */
 const resendUserOTP = asyncHandler (async  (req, res) => {
     // get the logged in user
-    const user = await User.findById(req.user.id).select('-password')
+    const user = req.user
     //check if user exists
     if (user){
         // generate , save and send OTP to users phone
@@ -130,7 +131,7 @@ const resendUserOTP = asyncHandler (async  (req, res) => {
 const verifyUserOTP = asyncHandler (async  (req, res) => {
 
     const current_time = moment().format('YYYY-MM-DD hh:mm:ss')
-    const {_id} = await User.findById(req.user.id)
+    const {_id} = req.user
     const {code} = req.body
 
     //get the otp
@@ -142,10 +143,32 @@ const verifyUserOTP = asyncHandler (async  (req, res) => {
         if(otp.status === 'new'){
             //check if otp is not expire
             if(otp.expiresAt >= current_time){
+                //update otp
                 await otp.updateOne({status:'used'})
+
+                //get new updated info for the user
+                const user = await User.findOne({_id})
                 //update verified to yes
-                await User.updateOne({verified:'yes'})
-                res.status(200).json({message:'Account has been verified'})
+                await user.updateOne({verified:'yes'})
+
+                //get the general user type
+                const userType = await UserType.findOne({user_id:_id})
+
+                //map the user with their type
+                const type = await Type.findOne({
+                    _id:userType.type_id,
+                })
+
+                //get new updated info for the user
+                const updatedUser = await User.findById(_id)
+
+                res.status(200).json({
+                    _id: updatedUser.id,
+                    name: updatedUser.name,
+                    verified: updatedUser.verified,
+                    token: generateToken(updatedUser._id),
+                    user_type:type.name,
+                })
 
             }
             else{
@@ -180,15 +203,23 @@ const loginUser = asyncHandler (async  (req, res) => {
 
     //check user password match
     if(user && ( await bcrypt.compare(password ,user.password))){
+        //get the general user type
+        const userType = await UserType.findOne({user_id:user.id})
+
+        //map the user with their type
+        const type = await Type.findOne({
+            _id:userType.type_id,
+        })
         res.status(200).json({
             _id: user.id,
             name: user.name,
-            email: user.email,
-            token: generateToken(user._id)
+            verified: user.verified,
+            token: generateToken(user._id),
+            user_type:type.name,
         })
     }else{
         res.status(400)
-        throw new Error('Username or password don\'t match')
+        throw new Error('Username or password don\'t match.')
     }
 
 })
@@ -291,7 +322,7 @@ const resetPasword = asyncHandler( async ( req , res) => {
  * @access Private
  */
 const getMe = asyncHandler (async (req, res) => {
-    const {_id , name , username ,phone ,email } = await User.findById(req.user.id)
+    const {_id , name , username ,phone ,email } = req.user
 
     //get the general user type
     const userType = await UserType.findOne({user_id:_id})
@@ -351,7 +382,7 @@ const getUserByUsername = asyncHandler (async (req, res) => {
  */
 const updateUser = asyncHandler( async ( req ,res ) =>{
     const {bio } = req.body
-    const user = await User.findById(req.user.id)
+    const user = req.user
 
     //check if user exists
     if(!user){

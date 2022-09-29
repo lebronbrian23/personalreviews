@@ -22,11 +22,10 @@ const saveOTP = async (model_id ,verification_type ,expires_at ) => {
 }
 
 //function to send OTP using AWS-SNS
-const sendSMS = (phone_umber ,message) => {
-
+const sendSMS = (phone_number ,message) => {
     let params = {
         Message: process.env.APP_NAME+': '+message,
-        PhoneNumber: phone_umber,
+        PhoneNumber: phone_number,
     };
     return new AWS.SNS({apiVersion: '2010–03–31'}).publish(params).promise()
         .then(message => {

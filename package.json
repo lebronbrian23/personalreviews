@@ -7,7 +7,8 @@
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "test": "jest",
-    "client": "npm start --prefix frontend"
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Brian Ssekalegga",
   "license": "MIT",
@@ -22,5 +23,8 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.4",
     "mongoose": "^6.6.0"
+  },
+  "devDependencies": {
+    "concurrently": "^7.4.0"
   }
 }
