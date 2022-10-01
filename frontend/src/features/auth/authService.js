@@ -73,6 +73,58 @@ const resendCode = async ( token) => {
     return response.data
 }
 
-const authService = { register , logout ,login ,forgotPassword ,resetPassword ,verifyUserOTP ,resendCode}
+//get logged in user data
+const getMe = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+        }
+    }
+
+    const response = await axios.get(API_URL+'me', config)
+
+    return response.data
+}
+
+//get user by username
+const getUserByUsername = async (username) => {
+    const config = {
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+        }
+    }
+
+    const response = await axios.get(API_URL+'u/'+username, config)
+
+    return response.data
+}
+
+//search users
+const searchUsers = async (search_query) => {
+    const config = {
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+        }
+    }
+    const {search , limit} = search_query
+
+    const response = await axios.get(API_URL+'search-users?search='+search+'&limit='+limit, config)
+
+    return response.data
+}
+
+const authService = {
+    getUserByUsername,
+    forgotPassword,
+    resetPassword,
+    verifyUserOTP,
+    searchUsers,
+    resendCode,
+    register,
+    logout,
+    login,
+    getMe
+}
 
 export default authService

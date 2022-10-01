@@ -6,6 +6,9 @@ const user = JSON.parse(localStorage.getItem('user'))
 
 const initialState = {
     user: user ? user : null,
+    userData: '',
+    userProfileData: '',
+    searchResults: '',
     isError:false,
     isSuccess:false,
     isLoading:false,
@@ -83,6 +86,37 @@ export const resendCode = createAsyncThunk('auth/resend-code', async  (_, thunkA
     }
 })
 
+//get logged in user data
+export const getMe = createAsyncThunk( 'auth/get-me' ,async (_ ,thunkAPI) => {
+    try{
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.getMe(token)
+    }catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//get user by username
+export const getUserByUsername = createAsyncThunk( 'auth/get-user-by-username' ,async (username ,thunkAPI) => {
+    try{
+        return await authService.getUserByUsername(username)
+    }catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//search users
+export const searchUsers = createAsyncThunk( 'auth/search-users' ,async (search_query ,thunkAPI) => {
+    try{
+        return await authService.searchUsers(search_query)
+    }catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -92,6 +126,9 @@ export const authSlice = createSlice({
             state.isSuccess = false
             state.isError = false
             state.mesaage = ''
+            state.userData = ''
+            state.userProfileData = ''
+            state.searchResults = ''
 
         }
     },
@@ -190,6 +227,52 @@ export const authSlice = createSlice({
                 state.message = action.payload
             })
             .addCase(resendCode.rejected , (state , action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+
+            //get logged user data
+            .addCase(getMe.pending,(state) => {
+                state.isLoading = true
+            })
+            .addCase(getMe.fulfilled, (state , action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.userData = action.payload
+            })
+            .addCase(getMe.rejected , (state , action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+                state.userData = ''
+            })
+
+            //get user by username
+            .addCase(getUserByUsername.pending,(state) => {
+                state.isLoading = true
+            })
+            .addCase(getUserByUsername.fulfilled, (state , action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.userProfileData = action.payload
+            })
+            .addCase(getUserByUsername.rejected , (state , action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+
+            //search users
+            .addCase(searchUsers.pending,(state) => {
+                state.isLoading = true
+            })
+            .addCase(searchUsers.fulfilled, (state , action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.searchResults = action.payload
+            })
+            .addCase(searchUsers.rejected , (state , action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

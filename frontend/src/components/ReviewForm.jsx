@@ -3,10 +3,10 @@ import { useDispatch} from "react-redux";
 import {createReview} from '../features/reviews/reviewSlice'
 import {toast} from "react-toastify";
 
-function ReviewForm() {
+function ReviewForm({reviewee}) {
     const [formData , setFormData] = useState({
         description:'',
-        reviewee_id:'63330adc45955926557d4ddf',
+        reviewee_id: reviewee,
         rating:0,
 
     })
@@ -37,7 +37,7 @@ function ReviewForm() {
 
             setFormData({
                 description:'',
-                reviewee_id:'63330adc45955926557d4ddf',
+                reviewee_id:'',
                 rating:0})
         }
 

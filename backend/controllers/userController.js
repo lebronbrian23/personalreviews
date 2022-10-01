@@ -55,7 +55,7 @@ const registerUser = asyncHandler (async (req, res) => {
     const user = await User.create({
         name,
         email,
-        phone : '+'+phone,
+        phone : '+' + phone,
         username,
         password:hashedPassword,
         profile_link:username,
@@ -90,6 +90,7 @@ const registerUser = asyncHandler (async (req, res) => {
             verified: user.verified,
             token: generateToken(user._id),
             user_type:userType.name,
+            username: user.username,
         })
     }else{
         res.status(400)
@@ -168,6 +169,7 @@ const verifyUserOTP = asyncHandler (async  (req, res) => {
                     verified: updatedUser.verified,
                     token: generateToken(updatedUser._id),
                     user_type:type.name,
+                    username: user.username,
                 })
 
             }
@@ -213,6 +215,7 @@ const loginUser = asyncHandler (async  (req, res) => {
         res.status(200).json({
             _id: user.id,
             name: user.name,
+            username: user.username,
             verified: user.verified,
             token: generateToken(user._id),
             user_type:type.name,
@@ -322,24 +325,7 @@ const resetPasword = asyncHandler( async ( req , res) => {
  * @access Private
  */
 const getMe = asyncHandler (async (req, res) => {
-    const {_id , name , username ,phone ,email } = req.user
-
-    //get the general user type
-    const userType = await UserType.findOne({user_id:_id})
-
-    //map the user with their type
-    const type = await Type.findOne({
-        _id:userType.type_id,
-    })
-
-    res.status(200).json({
-        id:_id,
-        name,
-        username,
-        phone,
-        email,
-        user_type:type.name,
-    })
+    res.status(200).json(await getUser(req.user.username))
 })
 
 /**
@@ -349,13 +335,15 @@ const getMe = asyncHandler (async (req, res) => {
  */
 const getUserByUsername = asyncHandler (async (req, res) => {
 
-    const user = await User.findOne({profile_link:req.params.username})
+    res.status(200).json(await getUser(req.params.username))
 
-    if(!user){
+    /*const find_user = await User.findOne({profile_link:req.params.username})
+
+    if(!find_user){
         res.status(400)
         throw new Error('User not found.')
     }
-    const reviews = await Review.find({ status: 'live' ,reviewee_id : user.id})
+    const reviews = await Review.find({ status: 'live' ,reviewee_id : find_user.id})
 
     const reviews_array = []
     // for loop to iterate through each review
@@ -371,9 +359,50 @@ const getUserByUsername = asyncHandler (async (req, res) => {
     }
 
     res.status(200).json({
-        'user' : {id:user._id , bio:user.bio , name:user.name}, reviews : reviews_array
+        user : {
+            id:find_user._id,
+            bio:find_user.bio,
+            name:find_user.name
+        },
+        reviews : reviews_array
     })
+
+     */
 })
+
+/**
+ * @description Get a usere
+ */
+const getUser = async (username) => {
+
+    const find_user = await User.findOne({username}).select('-password')
+
+    if(!find_user){
+        res.status(400)
+        throw new Error('User not found.')
+    }
+
+    //get the general user type
+    const userType = await UserType.findOne({user_id:find_user._id})
+
+    //map the user with their type
+    const type = await Type.findOne({
+        _id:userType.type_id,
+    })
+
+    const data = {
+        id:find_user._id,
+        name:find_user.name,
+        username:find_user.username,
+        phone:find_user.phone,
+        email:find_user.email,
+        bio:find_user.bio,
+        profile_link:find_user.profile_link,
+        user_type:type.name,
+    }
+
+    return data
+}
 
 /**
  * @description Update a user data
@@ -404,18 +433,17 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
 
 /**
  * @description search users
- * @route GET /api/users/list-users
+ * @route GET /api/users/search-users
  * @access Public
  */
 const searchUsers = asyncHandler (async (req, res) => {
     const {search , limit} = req.query
 
-    const search_query = escapeStringRegexp(search);
-    const users = await User.find({
-        $or: [{ name: { $regex: search_query } ,verified: 'yes', is_account_active: 'yes'}],
-    }).limit(limit)
+    const search_query = new RegExp(escapeStringRegexp(search) , 'ig');
 
-    //const users = await User.find();
+    const users = await User.find({ name: search_query  ,verified: 'yes', is_account_active: 'yes' })
+        .limit(limit).select('-password')
+
     const users_array =  []
 
     // for loop to iterate through each user
@@ -497,7 +525,6 @@ const listUsers = asyncHandler (async (req, res) => {
         $or: [{ name: { $regex: search_query } }],
     }).limit(limit)
 
-    //const users = await User.find();
     const users_array =  []
 
     // for loop to iterate through each user

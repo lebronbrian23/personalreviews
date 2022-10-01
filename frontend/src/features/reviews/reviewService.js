@@ -43,6 +43,55 @@ const deleteReview = async ( id , token) => {
 
     return response.data
 }
-const reviewService = { createReview , getReviews ,deleteReview}
+
+//get all reviews  sent to me
+const getReviewsToMe = async ( token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+        }
+    }
+
+    const response = await axios.get(API_URL + 'to-me' ,config)
+
+    return response.data
+}
+
+//get reviews by username
+const getUserReviews = async ( username) => {
+    const config = {
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+        }
+    }
+
+    const response = await axios.get(API_URL + 'get-user-reviews/'+username ,config)
+
+    return response.data
+}
+
+//get all reviews i sent to others
+const getReviewsToOthers = async ( token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+        }
+    }
+
+    const response = await axios.get(API_URL + 'to-others',config)
+
+    return response.data
+}
+
+const reviewService = {
+    getReviewsToOthers,
+    getReviewsToMe,
+    getUserReviews,
+    createReview,
+    deleteReview,
+    getReviews,
+    }
 
 export default reviewService

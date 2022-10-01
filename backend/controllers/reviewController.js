@@ -11,24 +11,55 @@ const {sendSMS} = require("./otpController");
  * @access Private
  */
 const getReviewsToMe = asyncHandler(async ( req, res) => {
+    res.status(200).json(await getReviewsByUser(req.user.id, 'reviewee'))
+})
 
-    const reviews = await Review.find({ status: 'live' ,reviewee_id : req.user.id}).sort({createdAt: 'descending'})
+/**
+ * @description Gets user's live reviews sent to them
+ * @route GET /api/reviews/get-user-reviews/:username
+ * @access Public
+ */
+const getUserReviews = asyncHandler(async ( req, res) => {
+    const user = await User.findOne({username:req.params.username})
+    if (user)
+        res.status(200).json(await getReviewsByUser(user._id, 'reviewee'))
+})
+
+/**
+ * @description Gets live reviews by user
+ */
+const getReviewsByUser = async (user_id , type) => {
+
+    const reviews = type === 'reviewee'
+        ? await Review.find({ status: 'live' ,reviewee_id : user_id}).sort({createdAt: 'descending'})
+        : (type === 'reviewer' ? await Review.find({ status: 'live' ,reviewer_id : user_id }).sort({createdAt: 'descending'})
+            : await Review.find({ status: 'live' }).sort({createdAt: 'descending'}) )
 
     const reviews_array = []
     // for loop to iterate through each review
     for (const index in reviews) {
+        //get the reviewer
+        const reviewer = await User.findById(reviews[index].reviewer_id)
+        //get the reviewee
+        const reviewee = await User.findById(reviews[index].reviewee_id)
 
         reviews_array.push({
             id:reviews[index]._id,
+            reviewer:reviewer.name,
+            reviewer_username:reviewer.username,
+            reviewer_id:reviews[index].reviewer_id,
             description:reviews[index].description,
             rating:reviews[index].rating,
             status:reviews[index].status,
-            createdAt:moment(reviews[index].createdAt).format("MMM D YYYY")
+            createdAt:moment(reviews[index].createdAt).format("MMM D YYYY"),
+            reviewee: type !== 'reviewee' && reviewee.name  ,
+            reviewee_username:type !== 'reviewee' && reviewee.username,
+            reviewee_id:type !== 'reviewee' && reviews[index].reviewee_id,
         })
     }
 
-    res.status(200).json(reviews_array)
-})
+    return reviews_array
+}
 
 /**
  * @description Gets live reviews sent to others
@@ -36,26 +67,7 @@ const getReviewsToMe = asyncHandler(async ( req, res) => {
  * @access Private
  */
 const getReviewsToOthers = asyncHandler(async ( req, res) => {
-    const reviews = await Review.find({ status: 'live' ,reviewer_id : req.user.id}).sort({createdAt: 'descending'})
-
-    const reviews_array = []
-    // for loop to iterate through each review
-    for (const index in reviews) {
-        //get the reviewee
-        const reviewee = await User.findById(reviews[index].reviewee_id)
-
-        reviews_array.push({
-            id:reviews[index]._id,
-            reviewee:reviewee.name,
-            reviewee_id:reviews[index].reviewee_id,
-            description:reviews[index].description,
-            rating:reviews[index].rating,
-            status:reviews[index].status,
-            createdAt:moment(reviews[index].createdAt).format("MMM D YYYY")
-        })
-    }
-
-    res.status(200).json(reviews_array)
+    res.status(200).json(await getReviewsByUser(req.user.id, 'revieweer'))
 })
 
 /**
@@ -120,31 +132,7 @@ const addReviews = asyncHandler(async ( req, res) => {
  * @access Private | Backend
  */
 const getReviews = asyncHandler(async ( req, res) => {
-    //get the reviews
-    const reviews = await Review.find({ status: 'live' }).sort({createdAt: 'descending'})
-
-    const reviews_array = []
-    // for loop to iterate through each review
-    for (const index in reviews) {
-        //get the reviewer
-        const reviewer = await User.findById(reviews[index].reviewer_id)
-        //get the reviewee
-        const reviewee = await User.findById(reviews[index].reviewee_id)
-
-        reviews_array.push({
-            id:reviews[index]._id,
-            reviewer:reviewer.name,
-            reviewer_id:reviews[index].reviewer_id,
-            reviewee:reviewee.name,
-            reviewee_id:reviews[index].reviewee_id,
-            description:reviews[index].description,
-            rating:reviews[index].rating,
-            status:reviews[index].status,
-            createdAt:moment(reviews[index].createdAt).format("MMM D YYYY")
-        })
-    }
-
-    res.status(200).json(reviews_array)
+    res.status(200).json(await getReviewsByUser('', 'all'))
 })
 
 /**_______________________________________
@@ -176,28 +164,36 @@ const updateReview = asyncHandler(async ( req, res) => {
  */
 const deleteReview = asyncHandler(async ( req, res) => {
 
-    //check the user type of the logged in user to see if there admins
-    if(req.type.name !== 'admin' || req.type.name !== 'moderator') {
+    //check the user type of the logged in user to see if there admins or moderator
+    if(req.type.name === 'admin' || req.type.name === 'moderator') {
+
+        const review = await Review.findById(req.params.id)
+        //check if review exists
+        if (!review) {
+            res.status(400)
+            throw new Error('Review not found')
+        }
+        //update the review
+        const updateReview = await Review.findOneAndUpdate(
+            {_id: req.params.id},
+            {status: 'down'},
+            {returnOriginal: false}
+        )
+
+        res.status(200).json(updateReview)
+    }else {
         res.status(400)
         throw new Error('Only Admins and Moderators can perform this action')
     }
 
-    const review = await Review.findById(req.params.id)
-    //check if review exists
-    if(!review){
-        res.status(400)
-        throw new Error('Review not found')
-    }
-    //update the review
-    const updateReview = await Review.findOneAndUpdate(
-        {_id:req.params.id} ,
-        {status :'down'} ,
-        {returnOriginal: false}
-    )
-
-    res.status(200).json(updateReview)
 })
 
 module.exports = {
-    getReviews, addReviews ,updateReview ,deleteReview,getReviewsToMe,getReviewsToOthers
+    addReviews,
+    getReviews,
+    deleteReview,
+    updateReview,
+    getUserReviews,
+    getReviewsToMe,
+    getReviewsToOthers
 }

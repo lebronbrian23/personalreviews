@@ -6,13 +6,16 @@ const {
     addReviews ,
     updateReview ,
     deleteReview ,
-    getReviewsToMe ,
+    getReviewsToMe,
+    getUserReviews,
     getReviewsToOthers } = require('../controllers/reviewController');
 
 
 router.route('/').get( getReviews ).post(protect, addReviews);
 
 router.get('/to-me', protect ,getReviewsToMe)
+
+router.get('/get-user-reviews/:username',  getUserReviews)
 
 router.get('/to-others', protect ,getReviewsToOthers)
 

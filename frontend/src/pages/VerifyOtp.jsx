@@ -3,8 +3,8 @@ import {FaFingerprint } from "react-icons/fa";
 import Spinner from "../components/Spinner";
 import {toast} from "react-toastify";
 import {useDispatch, useSelector} from "react-redux";
-import {Link, useNavigate} from "react-router-dom";
 import {verifyUserOTP , resendCode , reset} from "../features/auth/authSlice";
+import {useNavigate} from "react-router-dom";
 
 function VerifyOtp () {
 
