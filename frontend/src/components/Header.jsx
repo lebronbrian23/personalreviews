@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
-import { FaPowerOff} from 'react-icons/fa'
+import {FaBars, FaPowerOff, FaTimes} from 'react-icons/fa'
 import {Link ,useNavigate} from 'react-router-dom'
 import {useSelector , useDispatch} from "react-redux";
 import {logout , reset } from '../features/auth/authSlice'
+import NavItem from "./NavItem";
 
 function Header() {
+    const [showNav, setShowNav] = useState(false);
     const [search , setSearch] = useState('')
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -15,6 +17,7 @@ function Header() {
         dispatch(reset())
         navigate('/login')
     }
+
 
     const onSearch = (e) => {
         e.preventDefault()
@@ -28,59 +31,51 @@ function Header() {
         setSearch('')
     }
     return (
-        <header className='header'>
-            <div className='log'>
-                <Link to={ user ? '/dashboard' : '/login'}>Personal Review</Link>
-            </div>
+        <>
+            <header className='mb-xxl-1'>
+                <nav className="navbar navbar-expand-lg fixed-top navbar-dark bg-primary header-bg-color">
+                    <div className="container-fluid">
+                        <Link className='navbar-brand px-4 text-decoration-none' to={ user ? '/dashboard' : '/login'}>Personal Review</Link>
+                        <button type="button" className="navbar-toggler" data-bs-toggle="collapse"
+                                data-bs-target="#navbarCollapse">
+                            {showNav ? (
+                                <span><FaBars
+                                    onClick={() => setShowNav(!showNav)}
+                                    className="cursor-pointer"
+                                /></span>
+                            ) : (
+                                <span><FaTimes
+                                    onClick={() => setShowNav(!showNav)}
+                                    className="cursor-pointer"
+                                />
+                            </span>
+                            )}
+                        </button>
 
-            { user && (
-                <form onSubmit={onSearch}>
-                    <div className='form-group'>
-                        <input className='form-group' type='text' name='search' id='search'  value={search} onChange={(e) => setSearch(e.target.value)}/>
-                        <button type='submit' className='btn'>Search</button>
+                        <div className="collapse navbar-collapse m-3 justify-content-center" id="navbarCollapse">
+                            <div className="navbar-nav">
+                                { user? (
+                                    <>
+                                        <NavItem content="Home" href="/dashboard" />
+                                        { user.user_type === 'admin' && <NavItem content="Users" href="/Users" /> }
+                                        <NavItem content={user.name} href="/profile" />
+                                        <button className='nav-item nav-link text-white px-4 text-white' onClick={onLogout}>
+                                                Logout
+                                        </button>
+
+                                    </>
+                                ) : (
+                                    <>
+                                        <NavItem content="Login" href="/login" />
+                                        <NavItem content="Register" href="/register" />
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                </form>
-                )}
-
-            <ul>
-                { user? (
-                    <>
-                        <li>
-                            <Link to='/dashboard'>
-                                Home
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to='/profile'>
-                                 {user.name}
-                            </Link>
-                        </li>
-
-                        <li>
-                            <button className='btn' onClick={onLogout}>
-                                <FaPowerOff/> Logout
-                            </button>
-                        </li>
-
-                    </>
-                ) : (
-                    <>
-                        <li>
-                            <Link to='/login'>
-                                 Login
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to='/register'>
-                                 Register
-                            </Link>
-                        </li>
-
-                    </>
-                )}
-
-            </ul>
-        </header>
+                </nav>
+            </header>
+            </>
     )
 }
 export default Header

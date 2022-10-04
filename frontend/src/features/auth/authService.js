@@ -73,6 +73,20 @@ const resendCode = async ( token) => {
     return response.data
 }
 
+//update User data
+const updateUser = async (formData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+        }
+    }
+
+    const response = await axios.put(API_URL ,formData ,config)
+
+    return response.data
+}
+
 //get logged in user data
 const getMe = async (token) => {
     const config = {
@@ -121,6 +135,7 @@ const authService = {
     verifyUserOTP,
     searchUsers,
     resendCode,
+    updateUser,
     register,
     logout,
     login,

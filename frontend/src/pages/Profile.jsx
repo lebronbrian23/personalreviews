@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {getMe} from "../features/auth/authSlice";
@@ -70,7 +70,7 @@ function Profile () {
                         <span>{userData.bio}</span>
                     </div>
                     <div>
-                        <button className='btn'>Edit Bio</button>
+                        <Link className='btn' to={'/edit-profile'} userData={userData}>Edit Profile</Link>
                     </div>
                 </div>
             </section>

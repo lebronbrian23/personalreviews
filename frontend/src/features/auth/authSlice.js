@@ -86,6 +86,18 @@ export const resendCode = createAsyncThunk('auth/resend-code', async  (_, thunkA
     }
 })
 
+//update  user data
+export const updateUser = createAsyncThunk( 'auth/update-me' ,async (formData ,thunkAPI) => {
+    try{
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.updateUser(formData , token)
+    }catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+
 //get logged in user data
 export const getMe = createAsyncThunk( 'auth/get-me' ,async (_ ,thunkAPI) => {
     try{
@@ -246,6 +258,21 @@ export const authSlice = createSlice({
                 state.isError = true
                 state.message = action.payload
                 state.userData = ''
+            })
+
+            //update user data
+            .addCase(updateUser.pending,(state) => {
+                state.isLoading = true
+            })
+            .addCase(updateUser.fulfilled, (state , action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.message = action.payload
+            })
+            .addCase(updateUser.rejected , (state , action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
             })
 
             //get user by username

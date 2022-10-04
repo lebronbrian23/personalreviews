@@ -50,6 +50,7 @@ const getReviewsByUser = async (user_id , type) => {
             reviewer_id:reviews[index].reviewer_id,
             description:reviews[index].description,
             rating:reviews[index].rating,
+            order_no:reviews[index].order_no,
             status:reviews[index].status,
             createdAt:moment(reviews[index].createdAt).format("MMM D YYYY"),
             reviewee: type !== 'reviewee' && reviewee.name  ,
@@ -85,7 +86,7 @@ const addReviews = asyncHandler(async ( req, res) => {
         res.status(400)
         throw new Error('You can\'t perform this action')
     }
-    const  {description ,rating,reviewee_id } = req.body
+    const  {description ,rating,reviewee_id ,order_no} = req.body
     //check if description is in body
     if(!description){
         res.status(400)
@@ -119,6 +120,7 @@ const addReviews = asyncHandler(async ( req, res) => {
     const review = await Review.create({
         description : description,
         rating: rating,
+        order_no: order_no,
         reviewee_id: reviewee_id,
         reviewer_id: reviewer_id
     })

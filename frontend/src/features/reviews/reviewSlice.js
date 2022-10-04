@@ -9,7 +9,11 @@ const initialState = {
     isError:false,
     isSuccess:false,
     isLoading:false,
-    message: ''
+    message: '',
+    isNewReviewError:false,
+    isNewReviewSuccess:false,
+    isNewReviewLoading:false,
+    newReviewMessage: ''
 }
 //create a review
 export const createReview  = createAsyncThunk( 'reviews/create' ,async (reviewData , thunkAPI) => {
@@ -85,17 +89,17 @@ export const reviewSlice = createSlice({
         builder
             //create review case
             .addCase(createReview.pending,(state) => {
-                state.isLoading = true
+                state.isNewReviewLoading = true
             })
             .addCase(createReview.fulfilled, (state , action) => {
-                state.isLoading = false
-                state.isSuccess = true
+                state.isNewReviewLoading = false
+                state.isNewReviewSuccess = true
                 state.allReviews.push(action.payload)
             })
             .addCase(createReview.rejected , (state , action) => {
-                state.isLoading = false
-                state.isError = true
-                state.message = action.payload
+                state.isNewReviewLoading = false
+                state.isNewReviewError = true
+                state.newReviewMessage = action.payload
             })
 
             //get reviews case

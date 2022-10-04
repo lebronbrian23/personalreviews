@@ -410,9 +410,10 @@ const getUser = async (username) => {
  * @access Private
  */
 const updateUser = asyncHandler( async ( req ,res ) =>{
-    const {bio } = req.body
+    const {bio , photo} = req.body
     const user = req.user
 
+    console.log('nmm')
     //check if user exists
     if(!user){
         res.status(400)
@@ -599,17 +600,18 @@ const generateToken = (id) => {
 }
 
 module.exports = {
-    registerUser,
-    loginUser,
-    getMe,
-    verifyUserOTP,
-    resendUserOTP,
-    updateUser,
-    updateUserType,
-    listUsers,
-    searchUsers,
     updateUserAccountStatus,
     getUserByUsername,
+    updateUserType,
     forgotPasword,
-    resetPasword
+    verifyUserOTP,
+    resendUserOTP,
+    resetPasword,
+    registerUser,
+    searchUsers,
+    updateUser,
+    loginUser,
+    listUsers,
+    getMe,
+
 }

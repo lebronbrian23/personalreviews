@@ -1,21 +1,38 @@
-import {useState} from "react";
-import { useDispatch} from "react-redux";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {createReview} from '../features/reviews/reviewSlice'
 import {toast} from "react-toastify";
+import {reset} from "../features/auth/authSlice";
+import {FaInfoCircle} from "react-icons/fa";
 
 function ReviewForm({reviewee}) {
     const [formData , setFormData] = useState({
         description:'',
-        reviewee_id: reviewee,
+        reviewee_id: '',
         rating:0,
+        order_no:'',
 
     })
 
-    const { description , rating ,reviewee_id } = formData
+    const { description , rating ,reviewee_id,order_no } = formData
 
+    const {isNewReviewError , isNewReviewSuccess ,newReviewMessage } = useSelector(
+        (state) => state.reviews )
 
     const dispatch = useDispatch()
 
+    useEffect(()=> {
+            if (isNewReviewError) {
+                toast.error(newReviewMessage)
+            }
+            if (isNewReviewSuccess) {
+                toast.success('Review has been added')
+            }
+
+            dispatch(reset())
+        }
+        , [ isNewReviewError , isNewReviewSuccess , newReviewMessage ,dispatch]
+    )
     const onChange = (e) => {
         setFormData((prevState) => ({
             ...prevState,
@@ -31,32 +48,39 @@ function ReviewForm({reviewee}) {
             toast.error('Please select a rating between 0 - 5')
         }else {
             const formData = {
-                description, rating, reviewee_id
+                description, rating, reviewee_id:reviewee
             }
             dispatch(createReview(formData))
 
             setFormData({
                 description:'',
                 reviewee_id:'',
-                rating:0})
+                rating:0,
+                order_no:'',
+            })
         }
 
     }
-    return <section className='form'>
-        <form onSubmit={onSubmit}>
-            <div className='form-group'>
-                <label htmlFor='text'>Review</label>
-                <textarea name='description' value={description} onChange={onChange}/>
+    return <form onSubmit={onSubmit}>
+        <input type='hidden' value={reviewee} name='revieewee_id'   id='revieewee_id'  />
+            <div className="mb-3">
+                <label htmlFor="description" className="form-label"></label>
+                <textarea className="form-control" id="description" name='description' value={description}
+                      rows='4'    placeholder='Enter your description' onChange={onChange}/>
             </div>
-            <div className='form-group'>
-                <label htmlFor='text'>Rating</label>
-                <input name='rating' type='number' value={rating} onChange={onChange}/>
+
+            <div className='mb-3 col-5'>
+                <label htmlFor='order_no' className='text-gray-500 mb-2 inline' >Order / Invoice No
+                    <sup className='text-blue-800 cursor-pointer' data-bs-toggle="tooltip" data-bs-placement="top"
+                         title='This will not be displayed publicly, only required if reviewing a product'><FaInfoCircle className='inline'/></sup>
+                </label>
+                <input className='form-control'  name='order_no' type='text' id='order_no' value={order_no} onChange={onChange}/>
             </div>
-            <div className="form-group">
-                <button className='btn btn-block' type='submit'>Add review</button>
+            <div className='text-md-end mb-3'>
+                <button className='btn btn-primary' type='submit'>Add review</button>
             </div>
+
         </form>
-    </section>
 }
 
 export default ReviewForm

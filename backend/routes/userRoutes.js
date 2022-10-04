@@ -3,19 +3,19 @@ const express = require('express')
 const router = express.Router()
 
 const {
-    registerUser,
-    loginUser,
-    getMe,
-    verifyUserOTP,
-    resendUserOTP,
-    updateUser,
-    updateUserType,
-    listUsers,
-    searchUsers,
     updateUserAccountStatus,
     getUserByUsername,
+    updateUserType,
     forgotPasword,
-    resetPasword
+    verifyUserOTP,
+    resendUserOTP,
+    resetPasword,
+    registerUser,
+    searchUsers,
+    updateUser,
+    listUsers,
+    loginUser,
+    getMe,
 } = require('../controllers/userController')
 
 const {protect} = require('../middleware/authMiddleware')

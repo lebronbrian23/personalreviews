@@ -24,6 +24,9 @@ const reviewSchema = mongoose.Schema(
             type: Number,
             default: 0,
             max:5
+        },
+        order_no:{
+            type: String,
         }
     }, {
         timestamps: true
