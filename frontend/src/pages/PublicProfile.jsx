@@ -24,9 +24,6 @@ function PublicProfile () {
 
         dispatch(getUserReviews(username))
 
-        return () => {
-            dispatch(reset())
-        }
     },[username, navigate ,isError  , message, dispatch ])
 
 
@@ -41,7 +38,7 @@ function PublicProfile () {
                                 </Link>
                             ):(
                                 user._id !== userProfileData.id &&
-                                <ReviewForm reviewee={userProfileData.id}/>
+                                <ReviewForm reviewee_name={userProfileData.username} reviewee={userProfileData.id}/>
                             )
 
                         }

@@ -1,17 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {createReview} from '../features/reviews/reviewSlice'
+import {createReview, getUserReviews} from '../features/reviews/reviewSlice'
 import {toast} from "react-toastify";
 import {reset} from "../features/auth/authSlice";
 import {FaInfoCircle} from "react-icons/fa";
 
-function ReviewForm({reviewee}) {
+function ReviewForm({reviewee ,reviewee_name}) {
     const [formData , setFormData] = useState({
         description:'',
         reviewee_id: '',
         rating:0,
         order_no:'',
-
     })
 
     const { description , rating ,reviewee_id,order_no } = formData
@@ -27,9 +26,9 @@ function ReviewForm({reviewee}) {
             }
             if (isNewReviewSuccess) {
                 toast.success('Review has been added')
+                dispatch(getUserReviews(reviewee_name))
             }
 
-            dispatch(reset())
         }
         , [ isNewReviewError , isNewReviewSuccess , newReviewMessage ,dispatch]
     )

@@ -7,7 +7,6 @@ import NavItem from "./NavItem";
 
 function Header() {
     const [showNav, setShowNav] = useState(false);
-    const [search , setSearch] = useState('')
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const {user} = useSelector((state) => state.auth)
@@ -18,18 +17,6 @@ function Header() {
         navigate('/login')
     }
 
-
-    const onSearch = (e) => {
-        e.preventDefault()
-
-        if(search) {
-            navigate({
-                pathname: '/search-users',
-                search: '?limit=15&search='+ search,
-            })
-        }
-        setSearch('')
-    }
     return (
         <>
             <header className='mb-xxl-1'>
