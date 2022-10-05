@@ -1,11 +1,5 @@
 import React, {useState} from 'react'
-import {useEffect} from 'react'
-import {useLocation, useNavigate} from "react-router-dom";
-import {useSelector , useDispatch} from "react-redux";
-import Spinner from "../components/Spinner";
-import {searchUsers , reset} from "../features/auth/authSlice";
-import {toast} from "react-toastify";
-import SearchItem from "../components/SearchItem";
+import { useNavigate} from "react-router-dom";
 
 function SearchBar () {
     const [search , setSearch] = useState('')
