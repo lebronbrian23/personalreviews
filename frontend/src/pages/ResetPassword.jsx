@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector ,useDispatch} from "react-redux";
-import {Link, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {resetPassword, reset} from "../features/auth/authSlice";
-import {FaKeyboard} from "react-icons/fa";
+
 import Spinner from "../components/Spinner";
 
 function ResetPassword () {

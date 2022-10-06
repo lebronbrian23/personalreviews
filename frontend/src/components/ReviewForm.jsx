@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {createReview, getUserReviews} from '../features/reviews/reviewSlice'
 import {toast} from "react-toastify";
-import {reset} from "../features/auth/authSlice";
 import {FaInfoCircle} from "react-icons/fa";
 
 function ReviewForm({reviewee ,reviewee_name}) {
@@ -13,7 +12,7 @@ function ReviewForm({reviewee ,reviewee_name}) {
         order_no:'',
     })
 
-    const { description , rating ,reviewee_id,order_no } = formData
+    const { description , rating  ,order_no } = formData
 
     const {isNewReviewError , isNewReviewSuccess ,newReviewMessage } = useSelector(
         (state) => state.reviews )
@@ -30,7 +29,7 @@ function ReviewForm({reviewee ,reviewee_name}) {
             }
 
         }
-        , [ isNewReviewError , isNewReviewSuccess , newReviewMessage ,dispatch]
+        , [reviewee_name, isNewReviewError , isNewReviewSuccess , newReviewMessage ,dispatch]
     )
     const onChange = (e) => {
         setFormData((prevState) => ({
@@ -65,7 +64,7 @@ function ReviewForm({reviewee ,reviewee_name}) {
             <div className="mb-3">
                 <label htmlFor="description" className="form-label"></label>
                 <textarea className="form-control" id="description" name='description' value={description}
-                      rows='4'    placeholder='Enter your description' onChange={onChange}/>
+                      rows='4'  placeholder='Enter your description' onChange={onChange}/>
             </div>
 
             <div className='mb-3 col-5'>

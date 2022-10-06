@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {FaFingerprint } from "react-icons/fa";
 import Spinner from "../components/Spinner";
 import {toast} from "react-toastify";
 import {useDispatch, useSelector} from "react-redux";

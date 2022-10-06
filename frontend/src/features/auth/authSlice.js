@@ -9,8 +9,10 @@ const initialState = {
     userData: '',
     userProfileData: '',
     searchResults: '',
+    usersList: '',
     isError:false,
     isSuccess:false,
+    isUpdateUserSuccess:false,
     isLoading:false,
     mesaage:''
 
@@ -129,6 +131,17 @@ export const searchUsers = createAsyncThunk( 'auth/search-users' ,async (search_
     }
 })
 
+//list of users
+export const getUsersList = createAsyncThunk( 'auth/users-list' ,async (_ ,thunkAPI) => {
+    try{
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.getUsersList(token)
+    }catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -141,6 +154,7 @@ export const authSlice = createSlice({
             state.userData = ''
             state.userProfileData = ''
             state.searchResults = ''
+            state.usersList = ''
 
         }
     },
@@ -266,13 +280,14 @@ export const authSlice = createSlice({
             })
             .addCase(updateUser.fulfilled, (state , action) => {
                 state.isLoading = false
-                state.isSuccess = true
+                state.isUpdateUserSuccess = true
                 state.message = action.payload
             })
             .addCase(updateUser.rejected , (state , action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
+                state.isUpdateUserSuccess = false
             })
 
             //get user by username
@@ -300,6 +315,21 @@ export const authSlice = createSlice({
                 state.searchResults = action.payload
             })
             .addCase(searchUsers.rejected , (state , action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+
+            // users list
+            .addCase(getUsersList.pending,(state) => {
+                state.isLoading = true
+            })
+            .addCase(getUsersList.fulfilled, (state , action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.usersList = action.payload
+            })
+            .addCase(getUsersList.rejected , (state , action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

@@ -1,18 +1,19 @@
 import React, {useEffect, useState} from 'react'
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
-import {updateUser , reset} from "../features/auth/authSlice";
+import {updateUser, reset, getUserByUsername} from "../features/auth/authSlice";
 
 
-function EditProfile ({userData}) {
+function EditProfile () {
+
+    const { username } = useParams();
     const [bio , setBio] = useState('')
-    const [photo , setPhoto] = useState(null)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const {user ,isError ,message } = useSelector((state) => state.auth )
+    const {user ,userProfileData  ,isError ,message,isUpdateUserSuccess } = useSelector((state) => state.auth )
 
 
     useEffect(() => {
@@ -23,57 +24,41 @@ function EditProfile ({userData}) {
             navigate('/login')
         }
 
+        dispatch(getUserByUsername(username))
+
         return () => {
             dispatch(reset())
         }
-    },[user ,navigate ,isError  , message, dispatch ])
+    },[user ,navigate ,isError, username ,isUpdateUserSuccess , message, dispatch ])
 
-    const onChange = (e) => {
-        setBio((prevState) => ({
-            ...prevState,
-            [e.target.name]: e.target.value,
-        }))
-    }
-    const handleFileInput = (e) => {
-        setPhoto(e.target.files[0]);
-    }
     const onSubmit = async (e) => {
         e.preventDefault()
 
-        //let  convertedFile = photo ? await convertToBase64(photo) : '';
+        dispatch(updateUser({bio } ) )
 
-        const formData = { bio  }
-        dispatch(updateUser(formData))
+        if (isUpdateUserSuccess) {
+            toast.success('Profile Updated')
+            navigate('/profile')
+        }
 
     }
-    const convertToBase64 = (file) => {
-        return new Promise(resolve => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                resolve(reader.result);
-            }
-        })
-    }
 
-    return (<section className='form'>
-            {userData}
+    return (<div className='col-md-6 offset-3 mt-4'>
+
+            <h4>Edit Profile</h4>
             <form onSubmit={onSubmit}>
-
-                <div className='form-group'>
-                    <label htmlFor='text'>Photo</label>
-                    <input name='photo' id='photo' type='file' accept="image/*"  onChange={handleFileInput}/>
-                </div>
                 <div className='form-group'>
                     <label htmlFor='text'>Bio</label>
-                    <textarea name='bio' id='bio' value={bio} onChange={(e) => setBio(e.target.value)}/>
+                    <textarea name='bio' id='bio' onChange={(e) => setBio(e.target.value)}
+                    defaultValue={userProfileData.bio}  rows='5'  />
                 </div>
 
                 <div className="form-group">
-                    <button className='btn btn-block' type='submit'>Update Profile</button>
+                    <button className='btn btn-primary' type='submit'>Update Profile</button>
                 </div>
             </form>
-        </section>
+        </div>
+
     )
 }
 export default EditProfile

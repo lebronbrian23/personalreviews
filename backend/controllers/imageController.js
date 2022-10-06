@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const fs = require('fs');
 const AWS = require("aws-sdk");
-const Image = require('../models/imageModel')
+const ImageFile = require('../models/imageModel')
 const dotenv = require('dotenv').config();
 
 // function to save image

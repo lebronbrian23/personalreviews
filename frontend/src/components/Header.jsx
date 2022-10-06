@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {FaBars, FaPowerOff, FaTimes} from 'react-icons/fa'
+import {FaBars, FaTimes} from 'react-icons/fa'
 import {Link ,useNavigate} from 'react-router-dom'
 import {useSelector , useDispatch} from "react-redux";
 import {logout , reset } from '../features/auth/authSlice'
@@ -14,7 +14,7 @@ function Header() {
     const onLogout = () => {
         dispatch(logout())
         dispatch(reset())
-        navigate('/login')
+        navigate('/', {replace: true})
     }
 
     return (
@@ -26,12 +26,12 @@ function Header() {
                         <button type="button" className="navbar-toggler" data-bs-toggle="collapse"
                                 data-bs-target="#navbarCollapse">
                             {showNav ? (
-                                <span><FaBars
+                                <span><FaTimes
                                     onClick={() => setShowNav(!showNav)}
                                     className="cursor-pointer"
                                 /></span>
                             ) : (
-                                <span><FaTimes
+                                <span><FaBars
                                     onClick={() => setShowNav(!showNav)}
                                     className="cursor-pointer"
                                 />

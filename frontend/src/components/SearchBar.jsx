@@ -20,7 +20,7 @@ function SearchBar () {
     return (<>
             <div className="container">
                 <form className="d-flex" role="search" onSubmit={onSearch}>
-                    <input className="form-control me-2" type="search" placeholder="Search"
+                    <input className="form-control me-2" type="search" placeholder="Name e.g Brian"
                            aria-label="Search" name='search' value={search} onChange={(e) => setSearch(e.target.value)}/>
                     <button className="btn btn-light" type="submit">Search</button>
                 </form>

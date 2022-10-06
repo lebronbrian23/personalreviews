@@ -7,7 +7,7 @@ import Spinner from "../components/Spinner";
 import {getReviews , reset} from "../features/reviews/reviewSlice";
 import {toast} from "react-toastify";
 import ProfileSidebar from "../components/ProfileSidebar";
-import SearchBar from "./SearchBar";
+import SearchBar from "../components/SearchBar";
 
 function Dashboard () {
     const navigate = useNavigate()
@@ -37,7 +37,7 @@ function Dashboard () {
     }
     return (<>
             <div className="row">
-                <div className="col-md-8 col-sm-6">
+                <div className="col-md-8 col-sm-6 order-lg-first order-last">
 
                     <h3 className='text-md-start left'>Latest reviews</h3>
                     <div>
@@ -53,7 +53,7 @@ function Dashboard () {
 
                 </div>
 
-                <div className="col-md-4 col-sm-6 sticky">
+                <div className="col-md-4 col-sm-6">
                     <SearchBar/>
                     <ProfileSidebar/>
                 </div>

@@ -22,4 +22,4 @@ const imageSchema = mongoose.Schema(
         timestamps: true
     }
 )
-module.exports = mongoose.model('Image', imageSchema)
+module.exports = mongoose.model('ImageFile', imageSchema)

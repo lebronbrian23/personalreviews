@@ -3,16 +3,15 @@ import { NavLink } from "react-router-dom";
 
 function NavItem({ content, href }) {
     return (
-        <a className="text-lg nav-item nav-link text-white px-4">
-            <NavLink
-                className={({ isActive }) =>
-                    isActive ? "text-green-500  text-decoration-none" : "text-white  text-decoration-none"
-                }
-                to={href}
-            >
-                {content}
-            </NavLink>
-        </a>
+        <NavLink
+            className={({ isActive }) =>
+                isActive ? "text-lg nav-item nav-link text-white px-4 text-green-500 text-decoration-none"
+                    : "text-lg nav-item nav-link text-white px-4 text-white text-decoration-none"
+            }
+            to={href}
+        >
+            {content}
+        </NavLink>
     );
 }
 

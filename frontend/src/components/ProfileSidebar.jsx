@@ -32,7 +32,7 @@ function ProfileSidebar() {
         toast.success('Link copied');
     }
     return (
-        <div class="container mt-4 mb-4 p-3 justify-content-center">
+        <div className="container mt-4 mb-4 p-3 justify-content-center">
             <div className="card p-4">
                         <div className="">
                             <h4>Profile</h4>
@@ -51,7 +51,7 @@ function ProfileSidebar() {
                                 <span>{userData.bio} </span>
                             </div>
                             <div className=" d-flex mt-2">
-                                <button className="btn btn-primary">Edit Profile</button>
+                                <Link to={'/edit-profile/'+userData.username}  className="btn btn-primary">Edit Profile</Link>
                             </div>
                         </div>
                     </div>

@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {FaKey} from "react-icons/fa";
 import {useSelector ,useDispatch} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {forgotPassword ,reset} from "../features/auth/authSlice";
-import {} from "react-icons/fa";
 import Spinner from "../components/Spinner";
 
 function ForgotPassword () {

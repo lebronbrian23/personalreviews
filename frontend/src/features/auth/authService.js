@@ -82,7 +82,7 @@ const updateUser = async (formData, token) => {
         }
     }
 
-    const response = await axios.put(API_URL ,formData ,config)
+    const response = await axios.post(API_URL+'update-user' ,formData ,config)
 
     return response.data
 }
@@ -128,11 +128,25 @@ const searchUsers = async (search_query) => {
     return response.data
 }
 
+// users list
+const getUsersList = async (token) => {
+    const config = {
+        headers: {
+            Authorization : `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8;",
+        }
+    }
+    const response = await axios.get(API_URL+ 'list-users?search=&limit=', config)
+
+    return response.data
+}
+
 const authService = {
     getUserByUsername,
     forgotPassword,
     resetPassword,
     verifyUserOTP,
+    getUsersList,
     searchUsers,
     resendCode,
     updateUser,

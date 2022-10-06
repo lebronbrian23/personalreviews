@@ -6,6 +6,7 @@ import Spinner from "../components/Spinner";
 import {searchUsers , reset} from "../features/auth/authSlice";
 import {toast} from "react-toastify";
 import SearchItem from "../components/SearchItem";
+import SearchBar from "../components/SearchBar";
 
 function SearchResults () {
     const location = useLocation();
@@ -37,22 +38,24 @@ function SearchResults () {
         return <Spinner/>
     }
     return (<>
-        <section className='heading'>
-            <h1>{searchResults.length} search results containing {search}</h1>
-        </section>
+            <div className="row">
 
-        <section className='content'>
-            {searchResults.length > 0 ? (
-                <div className='reviews'>
-                    {searchResults.map((result) => (
-                        <SearchItem key={result.id} result={result}/>
-                    ))}
+                <div className="col-md-8 offset-2 col-sm-6 order-lg-first order-last">
+                    <SearchBar/>
+                    <h3 className='mt-4'>{searchResults.length} search results containing {search}</h3>
+
+                    <div className="">
+                        {searchResults.length > 0 ? (
+                            searchResults.map((result) => (
+                                <SearchItem key={result.id} result={result}/>
+                            ))
+                        ) : (
+                            <h3>No results found</h3>
+                        )
+                        }
+                    </div>
                 </div>
-            ) : (
-                <h3>No results found</h3>
-            )
-            }
-        </section>
+            </div>
     </>
     )
 }

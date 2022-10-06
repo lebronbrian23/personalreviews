@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import PublicProfile from "./pages/PublicProfile";
 import SearchResults from "./pages/SearchResults";
 import EditProfile from "./pages/EditProfile";
+import Users from "./pages/Users";
 
 function App() {
   return (
@@ -30,9 +31,10 @@ function App() {
                           <Route path='/reset-password' element={<ResetPassword/>}></Route>
                           <Route path='/verify-account' element={<VerifyOtp/>}></Route>
                           <Route path='/profile' element={<Profile/>}></Route>
-                          <Route path='/edit-profile' element={<EditProfile/>}></Route>
+                          <Route path='/edit-profile/:username' element={<EditProfile/>}></Route>
                           <Route path='/u/:username' element={<PublicProfile/>}></Route>
                           <Route path='/search-users' element={<SearchResults/>}></Route>
+                          <Route path='/users' element={<Users/>}></Route>
                       </Routes>
                   </main>
               </div>
