@@ -23,9 +23,13 @@ function SearchItem({result}) {
 
                     </div>
                     <p className="card-text">{result.bio}</p>
-                    <div className='text-end' title='Edit'>
+                    <div>
                         { user ?
-                            ( user.user_type === 'admin' ? <Link to={'/edit-profile/'+result.username}  className="text-sm text-primary"><FaCog/> Manage </Link> :'' ) :''
+                            ( user.user_type === 'admin' ?
+                                <Link to={'/edit-profile/'+result.username}  className="text-sm text-primary text-end" title='Edit'><FaCog/> Manage </Link>
+                                :
+                                '' )
+                            :''
                         }
                     </div>
                 </div>
