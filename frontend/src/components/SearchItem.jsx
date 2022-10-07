@@ -23,7 +23,7 @@ function SearchItem({result}) {
 
                     </div>
                     <p className="card-text">{result.bio}</p>
-                    <div>
+                    <p>
                         { user ?
                             ( user.user_type === 'admin' ?
                                 <Link to={'/edit-profile/'+result.username}  className="text-sm text-primary text-end" title='Edit'><FaCog/> Manage </Link>
@@ -31,7 +31,7 @@ function SearchItem({result}) {
                                 '' )
                             :''
                         }
-                    </div>
+                    </p>
                 </div>
             </div>
         </>
