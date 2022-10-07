@@ -53,6 +53,13 @@ function EditProfile () {
                     <textarea name='bio' id='bio' onChange={(e) => setBio(e.target.value)}
                     defaultValue={userProfileData.bio}  rows='5'  />
                 </div>
+                <div className="form-group">
+                    <label htmlFor='is_active'>Is active</label>
+                    <select id='is_active' name='is_active' value='' className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
                 <Form.Select aria-label="select example">
                     <option>Open this select menu</option>
                     <option value="1">One</option>
