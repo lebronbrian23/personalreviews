@@ -364,6 +364,7 @@ const getUser = async (username) => {
         phone:find_user.phone,
         email:find_user.email,
         bio:find_user.bio,
+        is_active:find_user.is_active,
         profile_link:find_user.profile_link,
         user_type:type.name,
     }
