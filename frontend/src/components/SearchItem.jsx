@@ -1,6 +1,6 @@
 import { useSelector} from "react-redux";
 import {Link} from "react-router-dom";
-import {FaEdit} from "react-icons/fa";
+import {FaCog, FaEdit} from "react-icons/fa";
 import React from "react";
 import {Badge} from "react-bootstrap";
 
@@ -23,11 +23,11 @@ function SearchItem({result}) {
 
                     </div>
                     <p className="card-text">{result.bio}</p>
-                    {/*<div className='text-end' title='Edit'>
+                    <div className='text-end' title='Edit'>
                         { user ?
-                            ( user.user_type === 'admin' ? <Link to={'/edit-profile/'+result.username}  className="text-sm text-primary"><FaEdit/></Link> :'' ) :''
+                            ( user.user_type === 'admin' ? <Link to={'/edit-profile/'+result.username}  className="text-sm text-primary"><FaCog/> Manage </Link> :'' ) :''
                         }
-                    </div>*/}
+                    </div>
                 </div>
             </div>
         </>
