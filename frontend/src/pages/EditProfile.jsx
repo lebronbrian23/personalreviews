@@ -63,7 +63,9 @@ function EditProfile () {
                         <option value="no">No</option>
                     </select>
                 </div>
-                <Form.Select aria-label="select example">
+                {is_active}
+                <Form.Select aria-label="select example"
+                             id='is_active' name='is_active' value={is_active} onChange={(e) => setIs_active(e.target.value)}>
                     <option>Open this select menu</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
