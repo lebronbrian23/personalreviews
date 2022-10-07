@@ -368,7 +368,6 @@ const getUser = async (username) => {
         profile_link:find_user.profile_link,
         user_type:type.name,
     }
-
     return data
 }
 
