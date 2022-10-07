@@ -57,7 +57,7 @@ function EditProfile () {
                 <div className="form-group">
                     <label htmlFor='is_active'>Is active</label>
                     <select id='is_active' name='is_active' value={is_active}
-                            onSelect={(e) => setIs_active(e.target.value)}
+                            onChange={(e) => setIs_active(e.target.value)}
                             className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
                         <option value="yes">Yes</option>
                         <option value="no">No</option>
