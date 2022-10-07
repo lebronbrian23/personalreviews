@@ -44,7 +44,7 @@ function ProfileSidebar() {
                             <span className="username">{userData.email}</span>
                             <span className="username">{userData.phone}</span>
                             <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-                                <span className="profile-link flex-wrap card-text">{generate_profile_link}</span>
+                                <span className="profile-link text-break">{generate_profile_link}</span>
                                 <span><button onClick={copy} disabled={!generate_profile_link}><FaRegClone/></button></span>
                             </div>
                             <div className="bio mt-3">
