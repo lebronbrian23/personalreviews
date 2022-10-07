@@ -334,7 +334,6 @@ const getMe = asyncHandler (async (req, res) => {
  * @access Public
  */
 const getUserByUsername = asyncHandler (async (req, res) => {
-
     res.status(200).json(await getUser(req.params.username))
 })
 
