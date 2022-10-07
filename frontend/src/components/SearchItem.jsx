@@ -26,7 +26,7 @@ function SearchItem({result}) {
                     <p>
                         { user ?
                             ( user.user_type === 'admin' ?
-                                <Link to={'/edit-profile/'+result.username}  className="text-sm text-primary text-end" title='Edit'> Manage </Link>
+                                <Link to={'/edit-profile/'+result.username}  className="text-sm text-primary text-end" title='Manage account'> Manage </Link>
                                 :
                                 '' )
                             :''

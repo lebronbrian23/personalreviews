@@ -3,6 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {updateUser, reset, getUserByUsername} from "../features/auth/authSlice";
+import Form from 'react-bootstrap/Form';
 
 
 function EditProfile () {
@@ -52,7 +53,12 @@ function EditProfile () {
                     <textarea name='bio' id='bio' onChange={(e) => setBio(e.target.value)}
                     defaultValue={userProfileData.bio}  rows='5'  />
                 </div>
-
+                <Form.Select aria-label="select example">
+                    <option>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </Form.Select>
                 <div className="form-group">
                     <button className='btn btn-primary' type='submit'>Update Profile</button>
                 </div>
