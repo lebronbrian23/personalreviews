@@ -37,7 +37,7 @@ function Dashboard () {
     }
     return (<>
             <div className="row">
-                <div className="col-md-8 col-sm-6 order-lg-first order-last">
+                <div className="col-md-7 col-sm-6 order-lg-first order-last">
 
                     <h3 className='text-md-start left'>Latest reviews</h3>
                     <div>
@@ -53,7 +53,7 @@ function Dashboard () {
 
                 </div>
 
-                <div className="col-md-4 col-sm-6">
+                <div className="col-md-5 col-sm-5">
                     <SearchBar/>
                     <ProfileSidebar/>
                 </div>
