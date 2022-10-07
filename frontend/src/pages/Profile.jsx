@@ -35,11 +35,11 @@ function Profile () {
 
     return (<>
             <div className="row">
-                <div className="col-md-8 col-sm-6 order-lg-first order-last">
+                <div className="col-md-7 col-sm-6 order-lg-first order-last">
                     <Tabs defaultActiveKey="to-me">
                         <Tab eventKey="to-me" title="Reviews to me">
                             {reviewsToMe.length > 0 ? (
-                                <div className='reviews'>
+                                <div>
                                     {reviewsToMe.map((review) => (
                                         <ReviewItem key={review.id} review={review}/>
                                     ))}
@@ -50,7 +50,7 @@ function Profile () {
                         </Tab>
                         <Tab eventKey="to-other" title="Reviews to others">
                             { reviewsToOthers.length > 0 ? (
-                                <div className='reviews'>
+                                <div>
                                     {reviewsToOthers.map((review) => (
                                         <ReviewItem key={review.id} review={review}/>
                                     ))}
@@ -64,7 +64,7 @@ function Profile () {
 
                 </div>
 
-                <div className="col-md-4 col-sm-6 order-sm-1">
+                <div className="col-md-5 col-sm-6">
                     <SearchBar/>
                     <ProfileSidebar/>
                 </div>
