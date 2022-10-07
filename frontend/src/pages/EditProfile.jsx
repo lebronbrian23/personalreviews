@@ -58,12 +58,13 @@ function EditProfile () {
                     <select defaultValue={userProfileData.is_active} id='is_active' name='is_active' value={is_active}
                             onChange={(e) => setIs_active(e.target.value)}
                             className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
-                        <option value={ userProfileData.is_active } >{ userProfileData.is_active }</option>
+                        <option value={userProfileData.is_active} >{ userProfileData.is_active }</option>
                         <option value="no">yesno</option>
                         <option value="yes">noyes</option>
                     </select>
                 </div>
                 {is_active}
+                *{ userProfileData.is_active }
                 <Form.Select aria-label="select example"
                              id='is_active' name='is_active' value={is_active} onChange={(e) => setIs_active(e.target.value)}>
                     <option>Open this select menu</option>
