@@ -54,16 +54,19 @@ function EditProfile () {
                     <textarea name='bio' id='bio' onChange={(e) => setBio(e.target.value)}
                     defaultValue={userProfileData.bio}  rows='5'  />
                 </div>
-                <div className="form-group">
-                    <label htmlFor='is_active'>Is active</label>
-                    <select id='is_account_active' name='is_account_active' value={is_account_active}
-                            onChange={(e) => setIs_active(e.target.value)}
-                            className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
-                        <option value={userProfileData.is_account_active} >{ userProfileData.is_account_active }</option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-                </div>
+
+                { user.user_type === 'admin' &&
+                    <div className="form-group">
+                        <label htmlFor='is_active'>Is account active</label>
+                        <select id='is_account_active' name='is_account_active' value={is_account_active}
+                                onChange={(e) => setIs_active(e.target.value)}
+                                className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
+                            <option value={userProfileData.is_account_active} >{ userProfileData.is_account_active }</option>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                }
 
                 <div className="form-group">
                     <button className='btn btn-primary' type='submit'>Update Profile</button>
