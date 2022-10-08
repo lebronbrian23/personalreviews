@@ -73,11 +73,11 @@ function EditProfile () {
                             onChange={(e) => setUser_type(e.target.value)}
                             className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
                         <option value={userProfileData.user_type} >{ userProfileData.user_type }</option>
-                        {/*{
+                        {
                             accountTypes.map((type) => (
                                 <option value={type.id}>{type.name}</option>
                             ))
-                        }*/}
+                        }
                     </select>
                 </div>
 
