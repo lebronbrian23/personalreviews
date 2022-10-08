@@ -552,6 +552,29 @@ const updateUserAccountStatus = asyncHandler( async ( req ,res ) =>{
 })
 
 /**
+ * @description Update a user account status
+ * @route PUT /api/users/update-user-account-status
+ * @access Private | Backend
+ */
+const getAccountTypes = asyncHandler( async ( req ,res ) =>{
+
+    //get the account types
+    const types = await Type.find()
+
+    const types_array = []
+    // for loop to iterate through each account type
+    for (const index in types) {
+
+        types_array.push({
+            id:types[index]._id,
+            name:types[index].name,
+        })
+    }
+    res.status(200).json(types_array)
+
+})
+
+/**
  *  user authentication
  */
 
@@ -567,6 +590,7 @@ const generateToken = (id) => {
 module.exports = {
     updateUserAccountStatus,
     getUserByUsername,
+    getAccountTypes,
     updateUserType,
     forgotPasword,
     verifyUserOTP,

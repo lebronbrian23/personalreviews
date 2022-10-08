@@ -141,8 +141,22 @@ const getUsersList = async (token) => {
     return response.data
 }
 
+// users list
+const getAccountTypes = async (token) => {
+    const config = {
+        headers: {
+            Authorization : `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8;",
+        }
+    }
+    const response = await axios.get(API_URL+ 'get-account-types', config)
+
+    return response.data
+}
+
 const authService = {
     getUserByUsername,
+    getAccountTypes,
     forgotPassword,
     resetPassword,
     verifyUserOTP,

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
-import {updateUser, reset, getUserByUsername} from "../features/auth/authSlice";
+import {updateUser, reset, getUserByUsername ,getAccountTypes} from "../features/auth/authSlice";
 import Form from 'react-bootstrap/Form';
 
 
@@ -11,11 +11,12 @@ function EditProfile () {
     const { username } = useParams();
     const [bio , setBio] = useState('')
     const [is_account_active , setIs_active] = useState('')
+    const [user_type , setUser_type] = useState('')
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const {user ,userProfileData  ,isError ,message,isUpdateUserSuccess } = useSelector((state) => state.auth )
+    const {user ,userProfileData , accountTypes ,isError ,message,isUpdateUserSuccess } = useSelector((state) => state.auth )
 
     useEffect(() => {
         if(isError){
@@ -26,11 +27,12 @@ function EditProfile () {
         }
 
         dispatch(getUserByUsername(username))
+        dispatch(getAccountTypes())
 
         return () => {
             dispatch(reset())
         }
-    },[user ,navigate ,isError, username ,isUpdateUserSuccess , message, dispatch ])
+    },[user ,navigate , isError, username ,isUpdateUserSuccess , message, dispatch ])
 
     const onSubmit = async (e) => {
         e.preventDefault()
@@ -63,15 +65,26 @@ function EditProfile () {
                         <option value="yes">Yes</option>
                     </select>
                 </div>
-                {is_account_active}
+
+               <div className="form-group">
+                    <label htmlFor='is_active'>User Type</label>
+                    <select id='user_type' name='user_type' value={user_type}
+                            onChange={(e) => setUser_type(e.target.value)}
+                            className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
+                        <option value={userProfileData.user_type} >{ userProfileData.user_type }</option>
+                        {accountTypes.map((type) =>(
+                            <option value={type.id}>{type.name}</option>
+                        ) )}
+
+                    </select>
+                </div>
+
                 *{ userProfileData.is_account_active }
-                <Form.Select aria-label="select example"
-                             id='is_account_active' name='is_account_active' value={is_account_active} onChange={(e) => setIs_active(e.target.value)}>
-                    <option>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </Form.Select>
+                <Form.Check
+                    type="switch"
+                    id="custom-switch"
+                    label="Check this switch"
+                />
                 <div className="form-group">
                     <button className='btn btn-primary' type='submit'>Update Profile</button>
                 </div>

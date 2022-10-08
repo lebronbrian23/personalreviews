@@ -5,6 +5,7 @@ const router = express.Router()
 const {
     updateUserAccountStatus,
     getUserByUsername,
+    getAccountTypes,
     updateUserType,
     forgotPasword,
     verifyUserOTP,
@@ -42,6 +43,8 @@ router.get('/search-users'  ,searchUsers)
 
 /** For Backend */
 router.put('/user-type', protect ,updateUserType)
+
+router.get('/get-account-types' ,getAccountTypes)
 
 router.get('/list-users' ,protect ,listUsers)
 
