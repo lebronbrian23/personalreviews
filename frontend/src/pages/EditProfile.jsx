@@ -35,7 +35,7 @@ function EditProfile () {
         return () => {
             dispatch(reset())
         }
-    },[user ,navigate , isError, username ,isUpdateUserSuccess , message, dispatch ])
+    },[user ,navigate , isError, username ,isUpdateUserSuccess ,accountTypes , message, dispatch ])
 
     const onSubmit = async (e) => {
         e.preventDefault()

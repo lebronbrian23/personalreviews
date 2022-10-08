@@ -347,7 +347,7 @@ export const authSlice = createSlice({
                 state.message = action.payload
             })
 
-            // users list
+            // account types
             .addCase(getAccountTypes.pending,(state) => {
                 state.isLoading = true
             })
