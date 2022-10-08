@@ -82,7 +82,11 @@ function EditProfile () {
                         }*/}
                     </select>
                 </div>
-
+                {
+                            accountTypes.map((type) => (
+                                <p key={type.id}>{type.name}</p>
+                            ))
+                        }
                 <Form.Check
                     type="switch"
                     id="custom-switch"
