@@ -26,11 +26,9 @@ function EditProfile () {
         if(!user) {
             navigate('/login')
         }
-
-        dispatch(getUserByUsername(username))
         dispatch(getAccountTypes())
 
-        console.log(accountTypes)
+        dispatch(getUserByUsername(username))
 
         return () => {
             dispatch(reset())
