@@ -65,7 +65,7 @@ function EditProfile () {
                         <option value="yes">noyes</option>
                     </select>
                 </div>
-                {is_active}
+                {is_account_active}
                 *{ userProfileData.is_account_active }
                 <Form.Select aria-label="select example"
                              id='is_account_active' name='is_account_active' value={is_account_active} onChange={(e) => setIs_active(e.target.value)}>
