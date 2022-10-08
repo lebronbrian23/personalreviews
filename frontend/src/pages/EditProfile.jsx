@@ -10,7 +10,7 @@ function EditProfile () {
 
     const { username } = useParams();
     const [bio , setBio] = useState('')
-    const [is_active , setIs_active] = useState('')
+    const [is_account_active , setIs_active] = useState('')
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
