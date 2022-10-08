@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {updateUser, reset, getUserByUsername ,getAccountTypes} from "../features/auth/authSlice";
 import Form from 'react-bootstrap/Form';
+import ReviewItem from "../components/ReviewItem";
 
 
 function EditProfile () {
@@ -72,10 +73,11 @@ function EditProfile () {
                             onChange={(e) => setUser_type(e.target.value)}
                             className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
                         <option value={userProfileData.user_type} >{ userProfileData.user_type }</option>
-                        {accountTypes.map((type) =>(
-                            <option value={type.id}>{type.name}</option>
-                        ) )}
-
+                        {/*{
+                            accountTypes.map((type) => (
+                                <option value={type.id}>{type.name}</option>
+                            ))
+                        }*/}
                     </select>
                 </div>
 
