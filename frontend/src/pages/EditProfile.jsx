@@ -55,7 +55,7 @@ function EditProfile () {
                 </div>
                 <div className="form-group">
                     <label htmlFor='is_active'>Is active</label>
-                    <select defaultValue={userProfileData.is_account_active} id='is_active' name='is_active' value={is_active}
+                    <select defaultValue={userProfileData.is_account_active} id='is_account_active' name='is_account_active' value={is_account_active}
                             onChange={(e) => setIs_active(e.target.value)}
                             className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
 {/*
