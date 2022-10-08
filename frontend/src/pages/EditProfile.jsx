@@ -36,7 +36,7 @@ function EditProfile () {
     const onSubmit = async (e) => {
         e.preventDefault()
 
-        dispatch(updateUser({bio } ) )
+        dispatch(updateUser({bio ,is_account_active} ) )
 
         if (isUpdateUserSuccess) {
             toast.success('Profile Updated')
