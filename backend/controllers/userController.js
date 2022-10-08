@@ -378,7 +378,7 @@ const getUser = async (username) => {
  */
 const updateUser = asyncHandler( async ( req ,res ) =>{
 
-    const {bio} = req.body
+    const {bio ,is_account_active} = req.body
     const user = await User.findById(req.user.id)
 
     //check if user exists
@@ -390,7 +390,10 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
     //update the user data
     const updateUserData = await User.findOneAndUpdate(
         {_id:user.id} ,
-        {bio:bio} ,
+        {
+            bio:bio,
+            is_account_active:is_account_active
+        } ,
         {returnOriginal: false})
 
     res.status(200).json(updateUserData)

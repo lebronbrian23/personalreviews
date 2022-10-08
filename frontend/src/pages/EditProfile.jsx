@@ -12,12 +12,11 @@ function EditProfile () {
     const { username } = useParams();
     const [bio , setBio] = useState('')
     const [is_account_active , setIs_active] = useState('')
-    const [user_type , setUser_type] = useState('')
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const {user ,userProfileData , accountTypes ,isError ,message,isUpdateUserSuccess } = useSelector((state) => state.auth )
+    const {user ,userProfileData  ,isError ,message,isUpdateUserSuccess } = useSelector((state) => state.auth )
 
     useEffect(() => {
         if(isError){
@@ -26,14 +25,13 @@ function EditProfile () {
         if(!user) {
             navigate('/login')
         }
-        dispatch(getAccountTypes())
 
         dispatch(getUserByUsername(username))
 
         return () => {
             dispatch(reset())
         }
-    },[user ,navigate , isError, username ,isUpdateUserSuccess ,accountTypes , message, dispatch ])
+    },[user ,navigate , isError, username ,isUpdateUserSuccess  , message, dispatch ])
 
     const onSubmit = async (e) => {
         e.preventDefault()
@@ -67,27 +65,6 @@ function EditProfile () {
                     </select>
                 </div>
 
-               <div className="form-group">
-                    <label htmlFor='is_active'>User Type</label>
-                    <select id='user_type' name='user_type' value={user_type}
-                            onChange={(e) => setUser_type(e.target.value)}
-                            className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
-                        <option value={userProfileData.user_type} >{ userProfileData.user_type }</option>
-                        {/*{
-                            accountTypes.map((type) => (
-                                <option value={type.id}>{type.name}</option>
-                            ))
-                        }*/}
-                    </select>
-                </div>
-                {
-                    accountTypes.length
-                }
-                <Form.Check
-                    type="switch"
-                    id="custom-switch"
-                    label="Check this switch"
-                />
                 <div className="form-group">
                     <button className='btn btn-primary' type='submit'>Update Profile</button>
                 </div>
