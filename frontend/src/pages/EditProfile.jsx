@@ -88,8 +88,8 @@ function EditProfile () {
                 }
                 { user.user_type === 'admin' &&
                     <div className="form-group">
-                        <label htmlFor='is_active'>User Account Type</label>
-                        <select id='is_account_active' name='is_account_active'
+                        <label htmlFor='user_type'>User Account Type</label>
+                        <select id='user_type' name='user_type'
                                 onChange={onchange}
                                 className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
                             <option value={userProfileData.user_type} >{ userProfileData.user_type }</option>
