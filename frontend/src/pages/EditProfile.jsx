@@ -10,8 +10,11 @@ import ReviewItem from "../components/ReviewItem";
 function EditProfile () {
 
     const { username } = useParams();
-    const [bio , setBio] = useState('')
-    const [is_account_active , setIs_active] = useState('')
+    const [formData, setFormData] = useState({
+    bio:'',
+    user_type:'',
+    is_account_active:'',
+    })
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -33,10 +36,19 @@ function EditProfile () {
         }
     },[user ,navigate , isError, username ,isUpdateUserSuccess  , message, dispatch ])
 
+    const onchange =  (e) => {
+        setFormData((prevState ) =>({
+            ...prevState,
+            [e.target.name]:e.target.value,
+        }) )
+
+    }
+
     const onSubmit = async (e) => {
         e.preventDefault()
 
-        dispatch(updateUser({bio ,is_account_active} ) )
+        const data = {bio ,is_account_active ,user_type}
+        dispatch(updateUser(data) )
 
         if (isUpdateUserSuccess) {
             toast.success('Profile Updated')
@@ -51,19 +63,33 @@ function EditProfile () {
             <form onSubmit={onSubmit}>
                 <div className='form-group'>
                     <label htmlFor='text'>Bio</label>
-                    <textarea name='bio' id='bio' onChange={(e) => setBio(e.target.value)}
+                    <textarea name='bio' id='bio' onChange={onchange}
                     defaultValue={userProfileData.bio}  rows='5'  />
                 </div>
 
-                { user.user_type === 'admin' &&
+                {user.user_type === 'admin' &&
                     <div className="form-group">
                         <label htmlFor='is_active'>Is account active</label>
                         <select id='is_account_active' name='is_account_active' value={is_account_active}
-                                onChange={(e) => setIs_active(e.target.value)}
+                                onChange={onchange}
                                 className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
-                            <option value={userProfileData.is_account_active} >{ userProfileData.is_account_active }</option>
+                            <option
+                                value={userProfileData.is_account_active}>{userProfileData.is_account_active}</option>
                             <option value="no">No</option>
                             <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                }
+                { user.user_type === 'admin' &&
+                    <div className="form-group">
+                        <label htmlFor='is_active'>User Account Type</label>
+                        <select id='is_account_active' name='is_account_active' value={user_type}
+                                onChange={onchange}
+                                className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
+                            <option value={userProfileData.user_type} >{ userProfileData.user_type }</option>
+                            <option value="general">general</option>
+                            <option value="admin">admin</option>
+                            <option value="moderator">moderator</option>
                         </select>
                     </div>
                 }
