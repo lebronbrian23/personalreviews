@@ -16,6 +16,8 @@ function EditProfile () {
     is_account_active:'',
     })
 
+    const {  bio , user_type , is_account_active } = formData
+
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -47,7 +49,11 @@ function EditProfile () {
     const onSubmit = async (e) => {
         e.preventDefault()
 
-        const data = {bio ,is_account_active ,user_type}
+        const data = {
+            bio ,
+            is_account_active,
+            user_type
+        }
         dispatch(updateUser(data) )
 
         if (isUpdateUserSuccess) {
@@ -70,7 +76,7 @@ function EditProfile () {
                 {user.user_type === 'admin' &&
                     <div className="form-group">
                         <label htmlFor='is_active'>Is account active</label>
-                        <select id='is_account_active' name='is_account_active' value={is_account_active}
+                        <select id='is_account_active' name='is_account_active'
                                 onChange={onchange}
                                 className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
                             <option
@@ -83,7 +89,7 @@ function EditProfile () {
                 { user.user_type === 'admin' &&
                     <div className="form-group">
                         <label htmlFor='is_active'>User Account Type</label>
-                        <select id='is_account_active' name='is_account_active' value={user_type}
+                        <select id='is_account_active' name='is_account_active'
                                 onChange={onchange}
                                 className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
                             <option value={userProfileData.user_type} >{ userProfileData.user_type }</option>
