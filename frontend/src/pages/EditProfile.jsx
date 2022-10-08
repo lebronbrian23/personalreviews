@@ -59,8 +59,8 @@ function EditProfile () {
                             onChange={(e) => setIs_active(e.target.value)}
                             className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
                         <option value={userProfileData.is_account_active} >{ userProfileData.is_account_active }</option>
-                        <option value="no">yesno</option>
-                        <option value="yes">noyes</option>
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
                 </div>
                 {is_account_active}
