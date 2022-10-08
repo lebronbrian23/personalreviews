@@ -66,7 +66,7 @@ function EditProfile () {
                     </select>
                 </div>
 
-               {/*<div className="form-group">
+               <div className="form-group">
                     <label htmlFor='is_active'>User Type</label>
                     <select id='user_type' name='user_type' value={user_type}
                             onChange={(e) => setUser_type(e.target.value)}
@@ -77,7 +77,7 @@ function EditProfile () {
                         ) )}
 
                     </select>
-                </div>*/}
+                </div>
 
                 <Form.Check
                     type="switch"

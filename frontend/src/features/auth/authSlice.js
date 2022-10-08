@@ -144,7 +144,7 @@ export const getUsersList = createAsyncThunk( 'auth/users-list' ,async (_ ,thunk
 })
 
 //list of account types
-export const getAccountTypes = createAsyncThunk( 'auth/users-list' ,async (_ ,thunkAPI) => {
+export const getAccountTypes = createAsyncThunk( 'auth/get-user-types' ,async (_ ,thunkAPI) => {
     try{
         return await authService.getAccountTypes()
     }catch (error) {
