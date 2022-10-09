@@ -388,7 +388,15 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
     }
 
     //update the user data
-    const updateUserData = await User.findOneAndUpdate(
+
+    /*const updateUserData = await User.findOneAndUpdate(
+        {_id:user.id} ,
+        {
+            bio:bio,
+            is_account_active:is_account_active
+        } ,
+        {returnOriginal: false})*/
+    const updateUserData = await User.updateOne(
         {_id:user.id} ,
         {
             bio:bio,
@@ -402,10 +410,13 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
 
         const userType = await UserType.findOne({user_id:user._id})
 
-        await userType.updateOne({
-            type_id:get_user_type._id,
-            _id:userType._id
-        })
+        await userType.updateOne(
+            {user_id:user._id},
+            {
+                type_id:get_user_type._id,
+                _id:userType._id
+            }
+        )
     }
     res.status(200).json(updateUserData)
 })

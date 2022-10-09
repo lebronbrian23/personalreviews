@@ -52,7 +52,7 @@ function EditProfile () {
 
         const data = {
             bio :bio,
-            is_account_active :is_account_active,
+            is_account_active:is_account_active,
             user_type :user_type,
             user_id:userProfileData.id
         }
