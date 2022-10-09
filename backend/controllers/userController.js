@@ -40,7 +40,7 @@ const registerUser = asyncHandler (async (req, res) => {
     const phoneExists = await User.findOne({phone:phone_number})
     if(phoneExists){
         res.status(400)
-        throw new Error('User with phone already exists ' +  phoneExists)
+        throw new Error('User with phone already exists')
     }
     //check if user with username exists
     const usernameExists = await User.findOne({username})
@@ -152,7 +152,7 @@ const verifyUserOTP = asyncHandler (async  (req, res) => {
                 //get new updated info for the user
                 const user = await User.findOne({_id})
                 //update verified to yes
-                await user.updateOne({verified:'yes'})
+                await user.updateOne({verified:'yes' ,is_account_active:'yes'})
 
                 //get the general user type
                 const userType = await UserType.findOne({user_id:_id})
