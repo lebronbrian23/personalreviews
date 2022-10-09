@@ -34,8 +34,10 @@ const registerUser = asyncHandler (async (req, res) => {
             throw new Error('User with email already exists')
         }
     }
+
+    const phone_number = phone.charAt(0) === '+' ? phone : '+'+phone;
     //check if user with phone exists
-    const phoneExists = await User.findOne({phone})
+    const phoneExists = await User.findOne({phone_number})
     if(phoneExists){
         res.status(400)
         throw new Error('User with phone already exists')
@@ -55,7 +57,7 @@ const registerUser = asyncHandler (async (req, res) => {
     const user = await User.create({
         name,
         email,
-        phone : '+' + phone,
+        phone : phone_number,
         username,
         password:hashedPassword,
         profile_link:username,
