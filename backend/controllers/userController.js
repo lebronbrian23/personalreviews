@@ -409,7 +409,7 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
     if(user_type){
         const get_user_type = await Type.findOne({name:user_type})
 
-        const userType = await UserType.findOne({user_id:user._id})
+        //const userType = await UserType.findOne({user_id:user._id})
 
         await userType.updateOne(
             {user_id:user._id},
