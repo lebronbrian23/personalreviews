@@ -51,11 +51,12 @@ function EditProfile () {
         e.preventDefault()
 
         const data = {
-            bio ,
-            is_account_active,
-            user_type,
-            user_id:user._id
+            bio :bio,
+            is_account_active :is_account_active,
+            user_type :user_type,
+            user_id:userProfileData.id
         }
+        console.log(data)
         dispatch(updateUser(data) )
 
         if (isUpdateUserSuccess) {
@@ -77,9 +78,8 @@ function EditProfile () {
 
                 {user.user_type === 'admin' &&
                     <div className="form-group">
-                        <label htmlFor='is_active'>Is account active</label>
-                        <select id='is_account_active' name='is_account_active'
-                                onChange={onchange}
+                        <label htmlFor='is_account_active'>Is account active</label>
+                        <select id='is_account_active' name='is_account_active' onChange={onchange}
                                 className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
                             <option
                                 value={userProfileData.is_account_active}>{userProfileData.is_account_active}</option>
