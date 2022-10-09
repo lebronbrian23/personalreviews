@@ -29,10 +29,13 @@ function Register () {
                 toast.error(message)
             }
             if (isSuccess || user) {
-                if(user.verified === 'yes')
-                    navigate('/')
-                else
-                    navigate('/verify-account')
+                if(user) {
+                    if(user.verified === 'yes')
+                        navigate('/')
+                    else
+                        navigate('/verify-account')
+                }else
+                    navigate('/register')
             }
 
             dispatch(reset())

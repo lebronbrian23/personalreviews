@@ -5,6 +5,7 @@ const UserType = require('./backend/models/userTypeModel')
 const Otp = require('./backend/models/otpModel')
 const Review = require('./backend/models/reviewModel')
 const Rating = require('./backend/models/ratingModel')
+const ImageFile = require('./backend/models/imageModel')
 const dotenv = require('dotenv').config();
 const bcrypt = require("bcryptjs");
 
@@ -57,7 +58,9 @@ const seedRatings = [
 const seedDB = async  ()  => {
     //delete existing tables
     await Otp.deleteMany({});
+    await ImageFile.deleteMany({});
     await Review.deleteMany({});
+    await Rating.deleteMany({});
     await UserType.deleteMany({});
     await Type.deleteMany({});
     await User.deleteMany({});

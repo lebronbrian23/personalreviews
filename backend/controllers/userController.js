@@ -389,14 +389,6 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
     }
 
     //update the user data
-
-    /*const updateUserData = await User.findOneAndUpdate(
-        {_id:user.id} ,
-        {
-            bio:bio,
-            is_account_active:is_account_active
-        } ,
-        {returnOriginal: false})*/
     const updateUserData = await User.updateOne(
         {_id:user.id} ,
         {
