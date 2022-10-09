@@ -12,6 +12,7 @@ function EditProfile () {
     const { username } = useParams();
     const [formData, setFormData] = useState({
     bio:'',
+    user_id:'',
     user_type:'',
     is_account_active:'',
     })
@@ -52,7 +53,8 @@ function EditProfile () {
         const data = {
             bio ,
             is_account_active,
-            user_type
+            user_type,
+            user_id:user.id
         }
         dispatch(updateUser(data) )
 
