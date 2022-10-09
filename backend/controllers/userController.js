@@ -379,6 +379,7 @@ const getUser = async (username) => {
 const updateUser = asyncHandler( async ( req ,res ) =>{
 
     const {bio ,is_account_active ,user_type, user_id} = req.body
+
     const user = await User.findById(user_id)
 
     //check if user exists
@@ -399,8 +400,8 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
     const updateUserData = await User.updateOne(
         {_id:user.id} ,
         {
-            bio:bio,
-            is_account_active:is_account_active
+            bio : bio ? bio : user.bio,
+            is_account_active : is_account_active ? is_account_active : user.is_account_active
         } ,
         {returnOriginal: false})
 
