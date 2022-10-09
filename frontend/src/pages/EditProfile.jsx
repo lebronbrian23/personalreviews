@@ -17,7 +17,7 @@ function EditProfile () {
     is_account_active:'',
     })
 
-    const {  bio , user_type , is_account_active } = formData
+    const { bio , user_type , is_account_active  } = formData
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -54,7 +54,7 @@ function EditProfile () {
             bio ,
             is_account_active,
             user_type,
-            user_id:user.id
+            user_id:user._id
         }
         dispatch(updateUser(data) )
 
