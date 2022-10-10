@@ -19,7 +19,7 @@ function App() {
   return (
       <>
           <Router>
-              <div className='container'>
+              <div className='container-fluid'>
                   <Header/>
                   <main>
                       <Routes>

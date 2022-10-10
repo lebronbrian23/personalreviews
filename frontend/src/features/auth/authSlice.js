@@ -207,6 +207,7 @@ export const authSlice = createSlice({
             //logout case
             .addCase(logout.fulfilled , (state ) => {
                 state.user = null
+                state.isSuccess = true
             })
 
             //forgot password cases

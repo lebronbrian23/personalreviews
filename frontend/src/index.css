@@ -98,7 +98,9 @@ h3 {
 .heading p {
     color: #828282;
 }
-
+.header-bg-color{
+    background-color: #2accff;
+}
 .reviews {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

@@ -20,7 +20,7 @@ function Header() {
     return (
         <>
             <header className='mb-xxl-1'>
-                <nav className="navbar navbar-expand-lg fixed-top navbar-dark bg-primary header-bg-color">
+                <nav className="navbar navbar-expand-lg fixed-top navbar-dark header-bg-color">
                     <div className="container-fluid">
                         <Link className='navbar-brand px-4 text-decoration-none' to={ user ? '/dashboard' : '/login'}>Personal Review</Link>
                         <button type="button" className="navbar-toggler" data-bs-toggle="collapse"
