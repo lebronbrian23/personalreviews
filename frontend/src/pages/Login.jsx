@@ -64,8 +64,8 @@ function Login () {
 
     return <>
         <div className="row" style={{margin: '-2.5em'}}>
-            <div className="col-md-6">
-                <img src='/infographics.jpg' className='img-fluid'/>
+            <div className="col-md-6 d-none d-lg-block d-md-block">
+                <img src='/infographics.jpg' style={{height:'100%', margin:'-1.5em'}} />
             </div>
             <div className="col-md-6 col-sm-12 ">
                 <div className="mt-10 max-w-md mx-auto">

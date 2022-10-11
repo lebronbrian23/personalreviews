@@ -75,7 +75,9 @@ function ReviewForm({reviewee ,reviewee_name}) {
                 <input className='form-control'  name='order_no' type='text' id='order_no' value={order_no} onChange={onChange}/>
             </div>
             <div className='text-md-end mb-3'>
-                <button className='btn btn-primary' type='submit'>Add review</button>
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type='submit'>Add review</button>
             </div>
 
         </form>

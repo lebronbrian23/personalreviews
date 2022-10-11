@@ -99,8 +99,12 @@ h3 {
     color: #828282;
 }
 .header-bg-color{
-    background-color: #2accff;
+    background-color: #2accff !important;
 }
+.bg-blue-500{
+    background-color: #2accff !important;
+}
+
 .reviews {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

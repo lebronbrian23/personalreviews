@@ -70,7 +70,12 @@ function Register () {
     }
 
     return <>
-        <div className="mt-10 max-w-md mx-auto">
+        <div className="row" style={{margin: '-2.5em'}}>
+            <div className="col-md-6 d-none d-lg-block d-md-block">
+                <img src='/infographics.jpg' style={{height:'100%', margin:'-1.5em'}} />
+            </div>
+            <div className="col-md-6 col-sm-12 ">
+                <div className="mt-10 max-w-md mx-auto">
             <div className="w-full bg-white shadow-md rounded px-8 pb-8 mb-4">
                 <p className="mt-10 max-w-md mx-auto text-center text-2xl font-semibold">
                    Register for an account
@@ -142,6 +147,8 @@ function Register () {
                 <p className="text-center text-gray-500 text-xs">
                     &copy;2022 All rights reserved.
                 </p>
+            </div>
+        </div>
             </div>
         </div>
     </>

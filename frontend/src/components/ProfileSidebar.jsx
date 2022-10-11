@@ -45,13 +45,15 @@ function ProfileSidebar() {
                             <span className="username">{userData.phone}</span>
                             <div className="d-flex flex-row justify-content-center align-items-center flex-wrap">
                                     <span className="profile-link">{generate_profile_link}</span>
-                                    <span className='p-1'><button onClick={copy} disabled={!generate_profile_link}> <FaRegClone/></button></span>
+                                    <span className='p-1'><button  onClick={copy} disabled={!generate_profile_link}> <FaRegClone/></button></span>
                             </div>
                             <div className="bio mt-3">
                                 <span>{userData.bio} </span>
                             </div>
                             <div className=" d-flex mt-2">
-                                <Link to={'/edit-profile/'+userData.username}  className="btn btn-primary">Edit Profile</Link>
+                                <Link to={'/edit-profile/'+userData.username}
+                                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-decoration-none"
+                                >Edit Profile</Link>
                             </div>
                         </div>
                     </div>
