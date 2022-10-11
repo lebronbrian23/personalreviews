@@ -23,7 +23,13 @@ function Dashboard () {
         if(!user) {
             navigate('/login')
         }
+        if (user) {
 
+            if(user.verified === 'yes')
+                navigate('/')
+            else
+                navigate('/verify-account')
+        }
         dispatch(getReviews())
 
         return () => {
