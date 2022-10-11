@@ -77,6 +77,7 @@ const seedDB = async  ()  => {
         email: '',
         phone: '+256783159235',
         username:'lebronbrian23',
+        profile_link:'lebronbrian23',
         password: await bcrypt.hash('keepkeep' ,salt),
         verified:'yes',
         is_account_active:'yes',
