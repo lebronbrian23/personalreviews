@@ -65,7 +65,7 @@ function Login () {
     return <>
         <div className="row" style={{margin: '-2.5em'}}>
             <div className="col-md-6 d-none d-lg-block d-md-block"
-                 style={{ backgroundImage: `url("/infographics.jpg")`, height: '100vh', backgroundRepeat: 'no-repeat',backgroundSize: 'cover',}}>
+                 style={{ backgroundImage: `url("/login-infographic.jpg")`, height: '100vh', backgroundRepeat: 'no-repeat',backgroundSize: 'cover',}}>
             </div>
             <div className="col-md-6 col-sm-12 ">
                 <div className="mt-10 max-w-md mx-auto">
