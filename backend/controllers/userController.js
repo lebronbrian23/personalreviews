@@ -151,8 +151,13 @@ const verifyUserOTP = asyncHandler (async  (req, res) => {
 
                 //get new updated info for the user
                 const user = await User.findOne({_id})
-                //update verified to yes
-                await User.findOneAndUpdate({_id:req.user._id},{verified:'yes' ,is_account_active:'yes'})
+
+                //update verified and is_account_active to yes
+                await User.findOneAndUpdate(
+                    {_id:user._id},
+                    {verified:'yes' , is_account_active:'yes' },
+                    {returnOriginal: false}
+                )
 
                 //get the general user type
                 const userType = await UserType.findOne({user_id:_id})
