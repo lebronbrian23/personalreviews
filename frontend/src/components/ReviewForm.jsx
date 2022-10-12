@@ -67,6 +67,22 @@ function ReviewForm({reviewee ,reviewee_name}) {
                       rows='4'  placeholder='Enter your description' onChange={onChange}/>
             </div>
 
+        <div className="row">
+            <div className='mb-3 col-5'>
+                <div>
+                    <label htmlFor='rating'>Rating</label>
+                    <select id='rating' name='rating' onChange={onChange}
+                            className="form-control">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </div>
+
             <div className='mb-3 col-5'>
                 <label htmlFor='order_no' className='text-gray-500 mb-2 inline' >Order / Invoice No
                     <sup className='text-blue-800 cursor-pointer' data-bs-toggle="tooltip" data-bs-placement="top"
@@ -74,6 +90,8 @@ function ReviewForm({reviewee ,reviewee_name}) {
                 </label>
                 <input className='form-control'  name='order_no' type='text' id='order_no' value={order_no} onChange={onChange}/>
             </div>
+        </div>
+
             <div className='text-md-end mb-3'>
                 <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

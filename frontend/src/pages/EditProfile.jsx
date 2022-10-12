@@ -39,7 +39,7 @@ function EditProfile () {
         }
     },[user ,navigate , isError, username ,isUpdateUserSuccess  , message, dispatch ])
 
-    const onchange =  (e) => {
+    const onChange =  (e) => {
         setFormData((prevState ) =>({
             ...prevState,
             [e.target.name]:e.target.value,
@@ -56,7 +56,6 @@ function EditProfile () {
             user_type :user_type,
             user_id:userProfileData.id
         }
-        console.log(data)
         dispatch(updateUser(data) )
 
         if (isUpdateUserSuccess) {
@@ -72,14 +71,14 @@ function EditProfile () {
             <form onSubmit={onSubmit}>
                 <div className='form-group'>
                     <label htmlFor='text'>Bio</label>
-                    <textarea name='bio' id='bio' onChange={onchange}
+                    <textarea name='bio' id='bio' onChange={onChange}
                     defaultValue={userProfileData.bio}  rows='5'  />
                 </div>
 
                 {user.user_type === 'admin' &&
                     <div className="form-group">
                         <label htmlFor='is_account_active'>Is account active</label>
-                        <select id='is_account_active' name='is_account_active' onChange={onchange}
+                        <select id='is_account_active' name='is_account_active' onChange={onChange}
                                 className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
                             <option
                                 value={userProfileData.is_account_active}>{userProfileData.is_account_active}</option>
@@ -91,7 +90,7 @@ function EditProfile () {
                 { user.user_type === 'admin' &&
                     <div className="form-group">
                         <label htmlFor='user_type'>User Account Type</label>
-                        <select id='user_type' name='user_type' onChange={onchange}
+                        <select id='user_type' name='user_type' onChange={onChange}
                                 className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
                             <option value={userProfileData.user_type} >{ userProfileData.user_type }</option>
                             <option value="general">general</option>

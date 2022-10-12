@@ -10,10 +10,26 @@ function ReviewItem({review}) {
     return (
         <div className="card mb-2">
             <div className='card-body text-start'>
-                <h4 className="card-title"><Link className='text-decoration-none' to={'/u/'+review.reviewee_username}>{review.reviewee}</Link>
-                    <span className='p-1 text-xs text-end'>
-                        {review.createdAt}
-                    </span>
+                <h4 className="card-title">
+                    <div className="row">
+                        <div className="col-md-6">
+                            <Link className='text-decoration-none' to={'/u/'+review.reviewee_username}>{review.reviewee}</Link>
+                            <span className='p-1 text-xs text-end'>
+                                {review.createdAt}
+                            </span>
+                        </div>
+                        <div className="col-md-6">
+                            <span className='p-1 text-xs text-end right-0'>
+                                {[...Array(review.rating)].map((star) => {
+                                    return (
+                                        <span className="text-amber-400">&#9733;</span>
+                                    );
+                                })}
+
+                            </span>
+                        </div>
+                    </div>
+
                 </h4>
                 <p className="card-text">{review.description}</p>
                 <div className='text-end' title='Delete'>
