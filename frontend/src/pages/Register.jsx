@@ -54,15 +54,26 @@ function Register () {
     const onsubmit = (e) => {
         e.preventDefault()
 
-        if(password !== confirm_password) {
+        if(!name)
+            toast.error('Name is required')
+        else if(!phone)
+            toast.error('Phone is required')
+        else if(!email)
+            toast.error('Email is required')
+        else if(!username)
+            toast.error('Username is required')
+        else if(!password)
+            toast.error('Password is required')
+        else if(password !== confirm_password)
             toast.error('Passwords don\'t match')
-        }else {
+        else {
             const userData = {
-                name , email , password , phone, username
+                name, email, password, phone, username
             }
 
             dispatch(register(userData))
         }
+
     }
 
     if(isLoading){
@@ -99,7 +110,7 @@ function Register () {
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                            Email
+                            Email <sup className='text-red-700 text-lg'>*</sup>
                         </label>
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

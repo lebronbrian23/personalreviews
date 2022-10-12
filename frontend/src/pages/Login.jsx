@@ -50,12 +50,18 @@ function Login () {
     const onsubmit = (e) => {
         e.preventDefault()
 
-        const userData = {
-            username,
-            password
-        }
+        if(!username)
+            toast.error('Username is required')
+        if(!password)
+            toast.error('Password is required')
+        else {
+            const userData = {
+                username,
+                password
+            }
 
-        dispatch(login(userData))
+            dispatch(login(userData))
+        }
     }
 
     if(isLoading){

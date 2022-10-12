@@ -68,7 +68,7 @@ const getReviewsByUser = async (user_id , type) => {
  * @access Private
  */
 const getReviewsToOthers = asyncHandler(async ( req, res) => {
-    res.status(200).json(await getReviewsByUser(req.user.id, 'revieweer'))
+    res.status(200).json(await getReviewsByUser(req.user.id, 'reviewer'))
 })
 
 /**

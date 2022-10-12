@@ -20,12 +20,12 @@ const {saveImage} = require("./imageController");
 const registerUser = asyncHandler (async (req, res) => {
     const{ name , email ,password ,phone ,username} = req.body
 
-    if(!name || !username || !password || !phone){
+    if(!name || !email || !username || !password || !phone){
         res.status(400)
         throw new Error('Please add all fields')
     }
 
-    //check if email has been submited
+    //check if email has been submitted
     if(email){
         //check if user with email exists
         const emailExists = await User.findOne({email})
@@ -514,7 +514,7 @@ const listUsers = asyncHandler (async (req, res) => {
     const search_query = new RegExp(escapeStringRegexp(search) , 'ig');
 
     const users = await User.find({ name: search_query  ,verified: 'yes', is_account_active: 'yes' })
-        .limit(limit).select('-password')
+        .limit(limit).select('-password').sort({createdAt: 'descending'})
 
     const users_array =  []
 
