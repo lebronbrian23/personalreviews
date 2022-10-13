@@ -16,11 +16,11 @@ To verify the information posted, every user will register for an account, and t
 I only allow one review to be posted on someone’s profile every 24 hours.
 
 ## User stories
-A user can registered for an account.
-A registered user can share a link containing all their reviews.
-A logged-in user can add a review on an individual.
-A user can search for a registered user and view all reviews posted about him/her.
-A logged in admin can’t add, edit or delete reviews posted.
+~ A user can registered for an account.
+~ A registered user can share a link containing all their reviews.
+~ A logged-in user can add a review on an individual.
+~ A user can search for a registered user and view all reviews posted about him/her.
+~ A logged in admin can’t add, edit or delete reviews posted.
 
 ## Features List
 ### The must have features are:-
