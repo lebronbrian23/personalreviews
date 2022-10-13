@@ -34,9 +34,8 @@ I only allow one review to be posted on someone’s profile every 24 hours.
 - User Management.
 
 ### The good to have features are:-
-API displaying reviews for a user.
-SMS aggregator for sending OTP.
-
+1. [ ] API displaying reviews for a user.
+2. [ ] SMS aggregator for sending OTP.
 
 ## Narrative Description
 
