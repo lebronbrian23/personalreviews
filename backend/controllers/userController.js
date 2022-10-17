@@ -239,7 +239,7 @@ const loginUser = asyncHandler (async  (req, res) => {
  * @route POST /api/users/forgot-password
  * @access Public
  */
-const forgotPasword = asyncHandler( async ( req , res) => {
+const forgotPassword = asyncHandler( async ( req , res) => {
     const { username } = req.body
 
     //check for username
@@ -254,7 +254,7 @@ const forgotPasword = asyncHandler( async ( req , res) => {
     const otp = await saveOTP(user.id ,'Password' ,6)
 
     //send OTP through sms
-    let message = 'Your password reset code is: '+ otp.code + ' expires at '+ otp.expiresAt+ '.Don\'t share it with anyone'
+    let message = user.name+'! your password reset code is: '+ otp.code + ' expires at '+ otp.expiresAt+ '.Don\'t share it with anyone'
     sendSMS(user.phone ,message)
 
     res.status(200).json({'message' : 'A password reset code has been sent to '+ user.phone})
@@ -266,7 +266,7 @@ const forgotPasword = asyncHandler( async ( req , res) => {
  * @route PUT /api/users/reset-password
  * @access Public
  */
-const resetPasword = asyncHandler( async ( req , res) => {
+const resetPassword = asyncHandler( async ( req , res) => {
 
     const { username ,code , password } = req.body
     const current_time = moment().format('YYYY-MM-DD hh:mm:ss');
@@ -299,7 +299,7 @@ const resetPasword = asyncHandler( async ( req , res) => {
                 await User.updateOne({username},{password:hashedPassword} )
 
                 //send OTP through sms
-                let message = 'Your password has been reset'
+                let message = user.name+'! your password has been reset'
                 sendSMS(user.phone ,message)
 
                 res.status(200).json({message:'Your password has been reset'})
@@ -620,10 +620,10 @@ module.exports = {
     getUserByUsername,
     getAccountTypes,
     updateUserType,
-    forgotPasword,
+    forgotPassword,
     verifyUserOTP,
     resendUserOTP,
-    resetPasword,
+    resetPassword,
     registerUser,
     searchUsers,
     updateUser,

@@ -7,10 +7,10 @@ const {
     getUserByUsername,
     getAccountTypes,
     updateUserType,
-    forgotPasword,
+    forgotPassword,
     verifyUserOTP,
     resendUserOTP,
-    resetPasword,
+    resetPassword,
     registerUser,
     searchUsers,
     updateUser,
@@ -29,9 +29,9 @@ router.post('/verify-user-otp', protect ,verifyUserOTP)
 
 router.post('/resend-user-otp', protect ,resendUserOTP)
 
-router.post('/forgot-password' ,forgotPasword)
+router.post('/forgot-password' ,forgotPassword)
 
-router.put('/reset-password' ,resetPasword)
+router.put('/reset-password' ,resetPassword)
 
 router.post('/login' ,loginUser)
 
