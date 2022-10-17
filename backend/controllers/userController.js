@@ -385,7 +385,9 @@ const getUser = async (username) => {
  */
 const updateUser = asyncHandler( async ( req ,res ) =>{
 
-    const {bio ,is_account_active ,user_type, user_id} = req.body
+    const {new_bio ,new_is_account_active ,new_user_type, user_id} = req.body
+
+    console.log(req.body)
 
     const user = await User.findById(user_id)
 
@@ -399,14 +401,14 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
     const updateUserData = await User.updateOne(
         {_id:user.id} ,
         {
-            bio : bio ? bio : user.bio,
-            is_account_active : is_account_active ? is_account_active : user.is_account_active
+            bio : new_bio ? new_bio : user.bio,
+            is_account_active : new_is_account_active ? new_is_account_active : user.is_account_active
         } ,
         {returnOriginal: false})
 
     // if user type has been submitted
-    if(user_type){
-        const get_user_type = await Type.findOne({name:user_type})
+    if(new_user_type){
+        const get_user_type = await Type.findOne({name:new_user_type})
 
         //const userType = await UserType.findOne({user_id:user._id})
 
@@ -496,7 +498,10 @@ const updateUserType = asyncHandler( async ( req ,res ) =>{
         throw new Error('User not found')
     }
     //update the user type
-    const updateUserType = await UserType.findOneAndUpdate({user_id:user_id} ,{type_id :type_id} , {returnOriginal: false})
+    const updateUserType = await UserType.findOneAndUpdate(
+        {user_id:user_id} ,
+        {type_id :type_id} ,
+        {returnOriginal: false})
 
     res.status(200).json(updateUserType)
 

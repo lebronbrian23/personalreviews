@@ -2,9 +2,8 @@ import React, {useEffect, useState} from 'react'
 import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
-import {updateUser, reset, getUserByUsername ,getAccountTypes} from "../features/auth/authSlice";
-import Form from 'react-bootstrap/Form';
-import ReviewItem from "../components/ReviewItem";
+import {updateUser, reset, getUserByUsername} from "../features/auth/authSlice";
+
 
 
 function EditProfile () {
@@ -51,10 +50,10 @@ function EditProfile () {
         e.preventDefault()
 
         const data = {
-            bio :bio,
-            is_account_active:is_account_active,
-            user_type :user_type,
-            user_id:userProfileData.id
+            new_bio: bio,
+            new_is_account_active: is_account_active,
+            new_user_type: user_type,
+            user_id: userProfileData.id
         }
         dispatch(updateUser(data) )
 
@@ -67,7 +66,7 @@ function EditProfile () {
 
     return (<div className='col-md-6 offset-3 mt-4'>
 
-            <h4>Edit Profile</h4>
+            <h4>Edit Profile - {userProfileData.name}</h4>
             <form onSubmit={onSubmit}>
                 <div className='form-group'>
                     <label htmlFor='text'>Bio</label>
