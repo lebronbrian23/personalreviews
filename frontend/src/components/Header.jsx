@@ -44,7 +44,7 @@ function Header() {
                                 { user? (
                                     <>
                                         <NavItem content="Home" href="/dashboard" />
-                                        { user.user_type === 'admin' && <NavItem content="Manage Users" href="/Users" /> }
+                                        { user.user_type === 'admin' && <NavItem content="Manage Users" href="/users" /> }
                                         <NavItem content={user.name} href="/profile" />
                                         <button className='nav-item nav-link text-white px-4 text-white' onClick={onLogout}>
                                                 Logout

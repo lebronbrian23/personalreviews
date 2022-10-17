@@ -59,7 +59,10 @@ function EditProfile () {
 
         if (isUpdateUserSuccess) {
             toast.success('Profile Updated')
-            navigate('/profile')
+            if(user.user_type === 'admin')
+                navigate('/users')
+            else
+                navigate('/profile')
         }
 
     }
@@ -74,7 +77,7 @@ function EditProfile () {
                     defaultValue={userProfileData.bio}  rows='5'  />
                 </div>
 
-                { user.user_type === 'admin' &&
+                { user.user_type === 'admin' &&  user.id !== userProfileData.id &&
                     <div className="form-group">
                         <label htmlFor='user_type'>User Account Type</label>
                         <select id='user_type' name='user_type' onChange={onChange}
@@ -87,7 +90,7 @@ function EditProfile () {
                     </div>
                 }
 
-                {user.user_type === 'admin' &&
+                {user.user_type === 'admin' && user.id !== userProfileData.id &&
                     <div className="form-group">
                         <label htmlFor='is_account_active'>Is account active</label>
                         <select id='is_account_active' name='is_account_active' onChange={onChange}
