@@ -83,7 +83,7 @@ const registerUser = asyncHandler (async (req, res) => {
         })
 
         //send OTP through sms
-        let message = 'Welcome! your Personal Review code is: '+ otp.code + ' expires at '+ otp.expiresAt+ '.Don\'t share it with anyone'
+        let message = 'Welcome! '+user.name+' your Personal Review code is: '+ otp.code + ' expires at '+ otp.expiresAt+ '.Don\'t share it with anyone'
         sendSMS(user.phone ,message)
 
         res.status(200).json({
@@ -115,7 +115,7 @@ const resendUserOTP = asyncHandler (async  (req, res) => {
         const otp = await saveOTP(user.id ,'User' ,6)
 
         //send OTP through sms
-        let message = 'Your Personal Review code is: '+ otp.code + ' expires at '+ otp.expiresAt+ '.Don\'t share it with anyone'
+        let message = user.name+'! your Personal Review code is: '+ otp.code + ' expires at '+ otp.expiresAt+ '.Don\'t share it with anyone'
         sendSMS(user.phone ,message)
 
         res.status(200).json({'message' : 'A code has been sent to '+ user.phone})
