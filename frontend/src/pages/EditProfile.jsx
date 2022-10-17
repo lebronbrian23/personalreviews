@@ -74,18 +74,6 @@ function EditProfile () {
                     defaultValue={userProfileData.bio}  rows='5'  />
                 </div>
 
-                {user.user_type === 'admin' &&
-                    <div className="form-group">
-                        <label htmlFor='is_account_active'>Is account active</label>
-                        <select id='is_account_active' name='is_account_active' onChange={onChange}
-                                className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
-                            <option
-                                value={userProfileData.is_account_active}>{userProfileData.is_account_active}</option>
-                            <option value="no">No</option>
-                            <option value="yes">Yes</option>
-                        </select>
-                    </div>
-                }
                 { user.user_type === 'admin' &&
                     <div className="form-group">
                         <label htmlFor='user_type'>User Account Type</label>
@@ -95,6 +83,19 @@ function EditProfile () {
                             <option value="general">general</option>
                             <option value="admin">admin</option>
                             <option value="moderator">moderator</option>
+                        </select>
+                    </div>
+                }
+
+                {user.user_type === 'admin' &&
+                    <div className="form-group">
+                        <label htmlFor='is_account_active'>Is account active</label>
+                        <select id='is_account_active' name='is_account_active' onChange={onChange}
+                                className="form-select form-select-lg mb-3" aria-label=".form-select-lg">
+                            <option
+                                value={userProfileData.is_account_active}>{userProfileData.is_account_active}</option>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
                         </select>
                     </div>
                 }
