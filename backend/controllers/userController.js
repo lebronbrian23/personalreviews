@@ -414,7 +414,6 @@ const updateUser = asyncHandler( async ( req ,res ) =>{
             {user_id:user_id},
             {
                 type_id:get_user_type._id,
-                _id:userType._id
             }
         )
     }
