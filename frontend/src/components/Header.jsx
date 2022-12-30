@@ -10,13 +10,11 @@ function Header() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const {user} = useSelector((state) => state.auth)
-
     const onLogout = () => {
         dispatch(logout())
         navigate('/')
 
     }
-
     return (
         <>
             <header className='mb-xxl-1'>
