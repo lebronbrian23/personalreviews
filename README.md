@@ -39,7 +39,7 @@ I only allow one review to be posted on someone’s profile every 24 hours.
 
 ## Narrative Description
 
-David was very happy with the logo Lebron made for his website and wanted to let people know about it. He registered for an account on [personalreview.herokuapp.com](personalreview.herokuapp.com) and searched for Lebron. 
+David was very happy with the logo Lebron made for his website and wanted to let people know about it. He registered for an account on [personalreview.vercel.com](personalreview.vercel.com) and searched for Lebron. 
 
 He clicked on his name from the result because Lebron had already created his profile on personal review. He then composed his review by clicking “Leave your review.” He selected his star rating.
 

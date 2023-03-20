@@ -15,7 +15,7 @@ const initialState = {
     isSuccess:false,
     isUpdateUserSuccess:false,
     isLoading:false,
-    mesaage:''
+    message:''
 
 }
 
